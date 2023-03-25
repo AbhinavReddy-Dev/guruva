@@ -1,9 +1,9 @@
-package dev.abhinavreddy.guruva.user;
+package dev.abhinavreddy.guruva.customtypes;
 
 public enum SkillLevel {
-    NOVICE("novice"),
-    INTERMEDIATE("intermediate"),
-    SENIOR("senior");
+    NOVICE("NOVICE"),
+    INTERMEDIATE("INTERMEDIATE"),
+    SENIOR("SENIOR");
     private final String skillLevel;
     SkillLevel(String skillLevel) {
         this.skillLevel = skillLevel;

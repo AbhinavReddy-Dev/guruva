@@ -1,8 +1,8 @@
-package dev.abhinavreddy.guruva.user;
+package dev.abhinavreddy.guruva.customtypes;
 
 public enum UserMode {
-    MENTOR("mentor"),
-    MENTEE("mentee");
+    MENTOR("MENTOR"),
+    MENTEE("MENTEE");
     private final String userMode;
     UserMode(String userMode) {
         this.userMode = userMode;

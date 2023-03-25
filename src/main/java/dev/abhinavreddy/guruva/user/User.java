@@ -1,40 +1,50 @@
 package dev.abhinavreddy.guruva.user;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import dev.abhinavreddy.guruva.customtypes.*;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@AllArgsConstructor
+@RequiredArgsConstructor(staticName = "of")
 @NoArgsConstructor
 @Document(collection = "user")
 public class User {
         @Id
+        @JsonSerialize(using= ToStringSerializer.class)
         private ObjectId id;
-        private String photo;
+        @NonNull
         private String username;
+        @NonNull
         private String password;
+        @NonNull
         private String userToken;
+        @NonNull
         private String fullName;
+        @NonNull
         private Gender gender;
+        @NonNull
         private String email;
-        private ArrayList<String> languagesSpoken;
+        private String photo;
+        private List<String> languagesSpoken;
         private String country;
-        private UserMode mode;
-        private ArrayList<ExternalLinks> externalLinks;
-        private ArrayList<Experience> experience;
-        private ArrayList<Skill> skills;
-        private Mode preferredMode;
-        private ArrayList<Skill> skillsThatNeedHelp;
-        private ArrayList<Skill> skillsGotHelp;
-        private ArrayList<Mentor> mentors;
+        private UserMode usermode;
+        private List<String> externalLinks;
+        private List<Experience> experience;
+        private List<Skill> skills;
+        private List<Skill> skillsNeedHelp;
+        private List<Skill> skillsGotHelp;
         private Integer mentorRating;
         private Integer menteeRating;
+        LocalDateTime createdAt;
+        LocalDateTime updatedAt;
 }
 //        dummy data in json format
 //        {"_id":{"$oid":"641ceb6fda78acd08a0381df"},

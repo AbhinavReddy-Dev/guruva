@@ -1,9 +1,8 @@
-package dev.abhinavreddy.guruva.user;
+package dev.abhinavreddy.guruva.customtypes;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @Data
 @AllArgsConstructor

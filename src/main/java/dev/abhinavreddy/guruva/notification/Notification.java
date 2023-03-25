@@ -1,6 +1,6 @@
 package dev.abhinavreddy.guruva.notification;
 
-import dev.abhinavreddy.guruva.user.User;
+import dev.abhinavreddy.guruva.customtypes.NotificationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,12 +17,12 @@ public class Notification {
          @Id
          private ObjectId id;
          private String title;
-         private String body;
+         private String message;
          private NotificationType type;
          private String sender;
          private String receiver;
          private LocalDateTime createdAt;
          private LocalDateTime updatedAt;
-         private ReadType read;
+         private Boolean isRead;
          private String link;
 }
