@@ -25,13 +25,12 @@ public class User {
         @NonNull
         private String password;
         @NonNull
-        private String userToken;
-        @NonNull
         private String fullName;
         @NonNull
         private Gender gender;
         @NonNull
         private String email;
+        private String userToken;
         private String photo;
         private List<String> languagesSpoken;
         private String country;
@@ -41,6 +40,7 @@ public class User {
         private List<Skill> skills;
         private List<Skill> skillsNeedHelp;
         private List<Skill> skillsGotHelp;
+        private List<Skill> skillsCanHelp;
         private Integer mentorRating;
         private Integer menteeRating;
         LocalDateTime createdAt;

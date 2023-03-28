@@ -25,4 +25,5 @@ public class Notification {
          private LocalDateTime updatedAt;
          private Boolean isRead;
          private String link;
+//         define the link parameters based on notification type
 }

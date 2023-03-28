@@ -24,20 +24,12 @@ public class UserController {
 
 
     @GetMapping("/{username}")
-    public ResponseEntity<Optional<User>> getUser(@PathVariable String username) {
+    public ResponseEntity<Boolean> findUser(@PathVariable String username) {
             Optional<User> user = userRepository.findByUsername(username);
             if(user.isPresent()) {
-//                get variable type of user gender
-//                System.out.println(user.get().getGender().getGender().getClass());
-//                System.out.println(user.get().getGender().getClass());
-                return ResponseEntity.ok(user);
+                return ResponseEntity.ok(true);
             }
             else return ResponseEntity.notFound().build();
     }
-//&authSource=admin&authMechanism=SCRAM-SHA-1
-//    @PostMapping("/auth/signup")
-//    public void signup(@RequestBody User user) {
-//        userRepository.save(user);
-//    }
 
 }

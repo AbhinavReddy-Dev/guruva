@@ -27,7 +27,7 @@ public class Mentee {
     private LocalDateTime closedAt;
     private List<Skill> skills;
     private LearningMode learningMode;
-    private Integer rating;
+    private Boolean hasMentor;
     private Boolean isClosed;
 }
 // dummy data
