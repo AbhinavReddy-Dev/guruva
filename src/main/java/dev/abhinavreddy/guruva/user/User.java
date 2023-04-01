@@ -6,10 +6,13 @@ import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import dev.abhinavreddy.guruva.customtypes.*;
+import dev.abhinavreddy.guruva.mentee.Mentee;
+import dev.abhinavreddy.guruva.mentor.Mentor;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 @Data
 @AllArgsConstructor
@@ -38,9 +41,10 @@ public class User {
         private List<String> externalLinks;
         private List<Experience> experience;
         private List<Skill> skills;
-        private List<Skill> skillsNeedHelp;
-        private List<Skill> skillsGotHelp;
-        private List<Skill> skillsCanHelp;
+        @DocumentReference
+        private List<Mentee> mentees;
+        @DocumentReference
+        private List<Mentor> mentors;
         private Integer mentorRating;
         private Integer menteeRating;
         LocalDateTime createdAt;
