@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 
 import java.time.LocalDateTime;
@@ -20,7 +21,11 @@ import java.util.List;
 public class Mentee {
     @Id
     private ObjectId id;
+
+    @DocumentReference(db = "guruva", collection = "user")
     private String mentor;
+
+    @DocumentReference(db = "guruva", collection = "user")
     private String mentee;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

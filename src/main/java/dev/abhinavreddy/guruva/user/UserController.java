@@ -10,11 +10,11 @@ import java.util.Optional;
 @RequestMapping("/api/user")
 public class UserController {
 
-    final
-    UserRepository userRepository;
+    @Autowired
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -22,10 +22,9 @@ public class UserController {
         return "Hello World";
     }
 
-
     @GetMapping("/{username}")
     public ResponseEntity<Boolean> findUser(@PathVariable String username) {
-            Optional<User> user = userRepository.findByUsername(username);
+            Optional<User> user = userService.getUser(username);
             if(user.isPresent()) {
                 return ResponseEntity.ok(true);
             }

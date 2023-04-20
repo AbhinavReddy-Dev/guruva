@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,10 @@ import java.util.List;
 public class Mentor {
     @Id
     private ObjectId id;
+
+    @DocumentReference(db = "guruva", collection = "user")
     private String mentor;
+
     private List<Skill> skills;
     private LearningMode learningMode;
     private LocalDateTime createdAt;
