@@ -10,9 +10,7 @@ import java.util.Optional;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @Autowired
     private final UserService userService;
-
     public UserController(UserService userService) {
         this.userService = userService;
     }
