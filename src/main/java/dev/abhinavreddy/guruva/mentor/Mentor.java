@@ -20,10 +20,8 @@ import java.util.List;
 public class Mentor {
     @Id
     private ObjectId id;
-
     @DocumentReference(db = "guruva", collection = "user")
     private String mentor;
-
     private List<Skill> skills;
     private LearningMode learningMode;
     private LocalDateTime createdAt;
