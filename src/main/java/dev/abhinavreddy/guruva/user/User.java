@@ -41,10 +41,6 @@ public class User {
         private List<String> externalLinks;
         private List<Experience> experience;
         private List<Skill> skills;
-        @DocumentReference(db = "guruva", collection = "mentee")
-        private List<Mentee> mentees;
-        @DocumentReference(db = "guruva", collection = "mentor")
-        private List<Mentor> mentors;
         private Integer mentorRating;
         private Integer menteeRating;
         LocalDateTime createdAt;

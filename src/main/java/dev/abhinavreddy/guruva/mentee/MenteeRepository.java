@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 public interface MenteeRepository extends MongoRepository<Mentee, ObjectId> {
-//  Query all records where mentor  is null
+//  Query all records where mentor is null
     @Query(value = "{ 'mentor' : null }")
     Iterable<Mentee> findAllByMentorNull();
 

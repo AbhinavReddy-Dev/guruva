@@ -6,17 +6,19 @@ import dev.abhinavreddy.guruva.user.User;
 import dev.abhinavreddy.guruva.user.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 public class MenteeService {
     private final MenteeRepository menteeRepository;
     private final UserRepository userRepository;
     private final MentorRepository mentorRepository;
-
+    private final MongoTemplate mongoTemplate;
 // constructor injection for menteeRepository and userRepository
-    public MenteeService(MenteeRepository menteeRepository, UserRepository userRepository, MentorRepository mentorRepository) {
+    public MenteeService(MenteeRepository menteeRepository, UserRepository userRepository, MentorRepository mentorRepository, MongoTemplate mongoTemplate) {
         this.menteeRepository = menteeRepository;
         this.userRepository = userRepository;
         this.mentorRepository = mentorRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
 // create mentee
@@ -27,30 +29,33 @@ public class MenteeService {
         mentee.setMentee(user);
         mentee.setCreatedAt(java.time.LocalDateTime.now());
         // update mentee with user
-        return menteeRepository.save(mentee);
+        return menteeRepository.insert(mentee);
     }
 
-//    Create a Mentee from Mentor ObjectId
-    public Mentee createMenteeFromMentor(ObjectId id, String username) {
-        Mentee mentee = new Mentee();
-        // set user as mentee
-        User user = userRepository.findByUsernameForProfile(username).orElse(null);
+// Add Mentor by username and create mentor based on Mentee details using mongo template
+    public Mentee addMentor(String mentorUserName, ObjectId menteeId) {
+        Mentee mentee = menteeRepository.findById(menteeId).orElse(null);
+        assert mentee != null;
+        // set user as mentor
+        User user = userRepository.findByUsernameForProfile(mentorUserName).orElse(null);
         assert user != null;
-        Mentor mentor = mentorRepository.findById(id).orElse(null);
-        assert mentor != null;
-        mentee.setMentee(user);
-        mentee.setMentor(mentor.getMentor());
-        mentee.setCreatedAt(java.time.LocalDateTime.now());
-        mentee.setSkills(mentor.getSkills());
-        mentee.setLearningMode(mentor.getLearningMode());
-        mentee.setIsClosed(false);
+        mentee.setMentor(user);
+        mentee.setUpdatedAt(java.time.LocalDateTime.now());
+        // Mentor object to be created and saved in mentor collection
+        Mentor mentor = new Mentor();
+        mentor.setMentor(user);
+        mentor.setCreatedAt(java.time.LocalDateTime.now());
+        mentor.setLearningMode(mentee.getLearningMode());
+        mentor.setSkills(mentee.getSkills());
+        mongoTemplate.save(mentor, "mentor");
         // update mentee with user
         return menteeRepository.save(mentee);
     }
 
+
 // add mentor to mentee
-    public Mentee addMentor(ObjectId id, String username) {
-        Mentee mentee = menteeRepository.findById(id).orElse(null);
+    public Mentee addMentor(ObjectId menteeId, String username) {
+        Mentee mentee = menteeRepository.findById(menteeId).orElse(null);
         assert mentee != null;
         User user = userRepository.findByUsernameForProfile(username).orElse(null);
         assert user != null;
