@@ -2,6 +2,7 @@ package dev.abhinavreddy.guruva.mentor;
 
 import dev.abhinavreddy.guruva.customtypes.LearningMode;
 import dev.abhinavreddy.guruva.customtypes.Skill;
+import dev.abhinavreddy.guruva.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ public class Mentor {
     @Id
     private ObjectId id;
     @DocumentReference(db = "guruva", collection = "user")
-    private String mentor;
+    private User mentor;
     private List<Skill> skills;
     private LearningMode learningMode;
     private LocalDateTime createdAt;

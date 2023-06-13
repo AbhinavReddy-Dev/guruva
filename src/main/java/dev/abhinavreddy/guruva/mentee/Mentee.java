@@ -2,9 +2,11 @@ package dev.abhinavreddy.guruva.mentee;
 
 import dev.abhinavreddy.guruva.customtypes.LearningMode;
 import dev.abhinavreddy.guruva.customtypes.Skill;
+import dev.abhinavreddy.guruva.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,18 +23,19 @@ import java.util.List;
 public class Mentee {
     @Id
     private ObjectId id;
-
     @DocumentReference(db = "guruva", collection = "user")
-    private String mentor;
-
+    private User mentee;
     @DocumentReference(db = "guruva", collection = "user")
-    private String mentee;
+    private User mentor;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime closedAt;
+    @NonNull
     private List<Skill> skills;
+    @NonNull
     private LearningMode learningMode;
     private Boolean isClosed;
+
 }
 // dummy data
 // {
