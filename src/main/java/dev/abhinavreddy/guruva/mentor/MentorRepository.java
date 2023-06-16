@@ -8,19 +8,23 @@ import org.springframework.data.mongodb.repository.Query;
 
 public interface MentorRepository extends MongoRepository<Mentor, ObjectId> {
 
+//    query all records where isDeleted is false
+    @Query(value = "{ 'isDeleted' : false }")
+    Iterable<Mentor> findAllByIsDeletedFalse();
+
 //  Query all records where mentor is user
     @Query(value = "{ 'mentor' : ?0 }")
-    Iterable<Mentee> findAllByMentor(User mentor);
+    Iterable<Mentor> findAllByMentor(User mentor);
 
 //    Query to find all records with learningMode
     @Query(value = "{ 'learningMode' : ?0 }")
-    Iterable<Mentee> findAllByLearningMode(String learningMode);
+    Iterable<Mentor> findAllByLearningMode(String learningMode);
 
 //    Query to find all records with mentors available
     @Query(value = "{ 'isAvailable' : true }")
-    Iterable<Mentee> findAllByIsAvailableTrue();
+    Iterable<Mentor> findAllByIsAvailableTrue();
 
 //    Query all records with rating
     @Query(value = "{ 'rating' : ?0 }")
-    Iterable<Mentee> findAllByRating(Integer rating);
+    Iterable<Mentor> findAllByRating(Integer rating);
 }

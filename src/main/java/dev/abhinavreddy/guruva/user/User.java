@@ -1,18 +1,19 @@
 package dev.abhinavreddy.guruva.user;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import dev.abhinavreddy.guruva.customtypes.*;
-import dev.abhinavreddy.guruva.mentee.Mentee;
-import dev.abhinavreddy.guruva.mentor.Mentor;
 import lombok.*;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 @Data
 @AllArgsConstructor
@@ -37,14 +38,40 @@ public class User {
         private String photo;
         private List<String> languagesSpoken;
         private String country;
-        private UserMode usermode;
         private List<String> externalLinks;
         private List<Experience> experience;
         private List<Skill> skills;
         private Integer mentorRating;
         private Integer menteeRating;
-        LocalDateTime createdAt;
-        LocalDateTime updatedAt;
+        @CreatedDate
+        private LocalDateTime createdAt;
+        @LastModifiedDate
+        private LocalDateTime updatedAt;
+
+// public method to return user details without password
+public Map<String, Object> getUserDetails() {
+        Map<String, Object> userDetails = new HashMap<>();
+
+        userDetails.put("id", this.id);
+        userDetails.put("username", this.username);
+        userDetails.put("fullName", this.fullName);
+        userDetails.put("gender", this.gender);
+        userDetails.put("email", this.email);
+        userDetails.put("userToken", this.userToken);
+        userDetails.put("photo", this.photo);
+        userDetails.put("languagesSpoken", this.languagesSpoken);
+        userDetails.put("country", this.country);
+        userDetails.put("externalLinks", this.externalLinks);
+        userDetails.put("experience", this.experience);
+        userDetails.put("skills", this.skills);
+        userDetails.put("mentorRating", this.mentorRating);
+        userDetails.put("menteeRating", this.menteeRating);
+        userDetails.put("createdAt", this.createdAt);
+        userDetails.put("updatedAt", this.updatedAt);
+        return userDetails;
+}
+
+
 }
 //        dummy data in json format
 //        {"_id":{"$oid":"641ceb6fda78acd08a0381df"},

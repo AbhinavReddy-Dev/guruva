@@ -8,6 +8,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.util.Objects;
+
 public class MenteeService {
     private final MenteeRepository menteeRepository;
     private final UserRepository userRepository;
@@ -27,24 +29,23 @@ public class MenteeService {
         User user = userRepository.findByUsernameForProfile(username).orElse(null);
         assert user != null;
         mentee.setMentee(user);
-        mentee.setCreatedAt(java.time.LocalDateTime.now());
         // update mentee with user
         return menteeRepository.insert(mentee);
     }
 
 // Add Mentor by username and create mentor based on Mentee details using mongo template
-    public Mentee addMentor(String mentorUserName, ObjectId menteeId) {
+    public Mentee addMentorByRequest(String mentorUserName, ObjectId menteeId) {
         Mentee mentee = menteeRepository.findById(menteeId).orElse(null);
         assert mentee != null;
         // set user as mentor
         User user = userRepository.findByUsernameForProfile(mentorUserName).orElse(null);
         assert user != null;
         mentee.setMentor(user);
-        mentee.setUpdatedAt(java.time.LocalDateTime.now());
+        mentee.setIsClosed(true);
+
         // Mentor object to be created and saved in mentor collection
         Mentor mentor = new Mentor();
         mentor.setMentor(user);
-        mentor.setCreatedAt(java.time.LocalDateTime.now());
         mentor.setLearningMode(mentee.getLearningMode());
         mentor.setSkills(mentee.getSkills());
         mongoTemplate.save(mentor, "mentor");
@@ -54,28 +55,39 @@ public class MenteeService {
 
 
 // add mentor to mentee
-    public Mentee addMentor(ObjectId menteeId, String username) {
+    public Mentee addMentorToMentee(ObjectId menteeId, String username) {
         Mentee mentee = menteeRepository.findById(menteeId).orElse(null);
         assert mentee != null;
         User user = userRepository.findByUsernameForProfile(username).orElse(null);
         assert user != null;
         mentee.setMentor(user);
-        mentee.setUpdatedAt(java.time.LocalDateTime.now());
+        mentee.setIsClosed(true);
         return menteeRepository.save(mentee);
     }
 
-// update mentee
-    public Mentee updateMentee(Mentee mentee) {
-        mentee.setUpdatedAt(java.time.LocalDateTime.now());
+// update mentee skills or learningmode
+    public Mentee updateMentee(Mentee mentee, ObjectId menteeId) {
+        Mentee mentee1 = menteeRepository.findById(menteeId).orElse(null);
+        assert mentee1 != null;
+        mentee1.setLearningMode(mentee.getLearningMode());
+        mentee1.setSkills(mentee.getSkills());
+        return menteeRepository.save(mentee1);
+    }
+
+//    remove mentor and update isClosed to false
+    public Mentee removeMentor(ObjectId menteeId) {
+        Mentee mentee = menteeRepository.findById(menteeId).orElse(null);
+        assert mentee != null;
+        mentee.setMentor(null);
+        mentee.setIsClosed(false);
         return menteeRepository.save(mentee);
     }
 
-// close  mentee
+// close mentee
     public Mentee closeMentee(ObjectId id) {
         Mentee mentee = menteeRepository.findById(id).orElse(null);
         assert mentee != null;
         mentee.setIsClosed(true);
-        mentee.setClosedAt(java.time.LocalDateTime.now());
         return menteeRepository.save(mentee);
     }
 
@@ -110,9 +122,12 @@ public class MenteeService {
     }
 
 //
-// delete mentee
-    public void deleteMentee(ObjectId id) {
-        menteeRepository.deleteById(id);
+// delete mentee from user view
+    public Mentee deleteMentee(ObjectId id) {
+        Mentee mentee = menteeRepository.findById(id).orElse(null);
+        assert mentee != null;
+        mentee.setIsDeleted(true);
+        return menteeRepository.save(mentee);
     }
 
 }

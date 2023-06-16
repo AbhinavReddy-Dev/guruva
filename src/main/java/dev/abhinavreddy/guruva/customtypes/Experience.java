@@ -11,7 +11,8 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Experience {
+    private String title;
     private String company;
     private Integer years;
-    private ArrayList<String> skillsUsed;
+    private ArrayList<String> skills;
 }

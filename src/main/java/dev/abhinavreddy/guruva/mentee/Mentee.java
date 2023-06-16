@@ -8,7 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -23,19 +25,21 @@ import java.util.List;
 public class Mentee {
     @Id
     private ObjectId id;
+    @NonNull
     @DocumentReference(db = "guruva", collection = "user")
     private User mentee;
     @DocumentReference(db = "guruva", collection = "user")
     private User mentor;
+    @CreatedDate
     private LocalDateTime createdAt;
+    @LastModifiedDate
     private LocalDateTime updatedAt;
-    private LocalDateTime closedAt;
     @NonNull
     private List<Skill> skills;
     @NonNull
     private LearningMode learningMode;
-    private Boolean isClosed;
-
+    private Boolean isClosed = false;
+    private Boolean isDeleted = false;
 }
 // dummy data
 // {

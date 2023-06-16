@@ -5,7 +5,6 @@ import dev.abhinavreddy.guruva.mentee.MenteeRepository;
 import dev.abhinavreddy.guruva.user.User;
 import dev.abhinavreddy.guruva.user.UserRepository;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,6 @@ public class MentorService {
         User user = userRepository.findByUsernameForProfile(username).orElse(null);
         assert user != null;
         mentor.setMentor(user);
-        mentor.setCreatedAt(java.time.LocalDateTime.now());
         // update mentor with user
         return mentorRepository.insert(mentor);
     }
@@ -40,17 +38,51 @@ public class MentorService {
         // set user as mentee
         User user = userRepository.findByUsernameForProfile(menteeUserName).orElse(null);
         assert user != null;
-        mentor.setUpdatedAt(java.time.LocalDateTime.now());
+
         // Mentee object to be created and saved in mentee collection
         Mentee mentee = new Mentee();
         mentee.setMentee(user);
         mentee.setMentor(mentor.getMentor());
         mentee.setLearningMode(mentor.getLearningMode());
         mentee.setSkills(mentor.getSkills());
-        mentee.setCreatedAt(java.time.LocalDateTime.now());
         mongoTemplate.save(mentee, "mentee");
         // update mentor with user
         return mentorRepository.save(mentor);
     }
 
+//    get all mentors not deleted
+    public Iterable<Mentor> getAllMentors() {
+        return mentorRepository.findAllByIsDeletedFalse();
+    }
+
+//    get all mentors by username
+    public Iterable<Mentor> getAllMentorsByUsername(String username) {
+        User user = userRepository.findByUsernameForProfile(username).orElse(null);
+        return mentorRepository.findAllByMentor(user);
+    }
+
+//    get all by learning mode
+    public Iterable<Mentor> getAllMentorsByLearningMode(String learningMode) {
+        return mentorRepository.findAllByLearningMode(learningMode);
+    }
+
+//    get all by is available
+    public Iterable<Mentor> getAllMentorsByIsAvailable() {
+        return mentorRepository.findAllByIsAvailableTrue();
+    }
+
+//    get all by rating
+    public Iterable<Mentor> getAllMentorsByRating(Integer rating) {
+        return mentorRepository.findAllByRating(rating);
+    }
+
+//    delete mentor
+    public Mentor deleteMentor(ObjectId mentorId) {
+        Mentor mentor = mentorRepository.findById(mentorId).orElse(null);
+        assert mentor != null;
+        mentor.setIsAvailable(false);
+        mentor.setIsDeleted(true);
+
+        return mentorRepository.save(mentor);
+    }
 }

@@ -2,6 +2,7 @@ package dev.abhinavreddy.guruva.user;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -13,9 +14,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createUser(User user) {
+    public Map<String, Object> createUser(User user) {
         user.setUserToken(generateNewToken(user.getUsername()));
-        return userRepository.save(user);
+        User newUser = userRepository.save(user);
+        return newUser.getUserDetails();
     }
 
     public Optional<User> getUser(String username) {
@@ -25,7 +27,7 @@ public class UserService {
     public Optional<User> updateUser(User user) {
         return userRepository.findById(user.getId()).map(u -> {
             u.setFullName(user.getFullName());
-            u.setUsermode( user.getUsermode());
+//            u.setUsermode( user.getUsermode());
             u.setExperience(user.getExperience());
             u.setPhoto(user.getPhoto());
             u.setGender(user.getGender());
@@ -33,7 +35,6 @@ public class UserService {
             u.setLanguagesSpoken(user.getLanguagesSpoken());
             u.setExternalLinks(user.getExternalLinks());
             u.setCountry(user.getCountry());
-            u.setUpdatedAt(user.getUpdatedAt());
             return userRepository.save(u);
         });
     }
@@ -41,7 +42,6 @@ public class UserService {
     public Optional<User> updateUserSkills(User user){
         return userRepository.findById(user.getId()).map(u -> {
             u.setSkills(user.getSkills());
-            u.setUpdatedAt(user.getUpdatedAt());
             return userRepository.save(u);
         });
     }
@@ -49,7 +49,6 @@ public class UserService {
     public Optional<User> updateMentorRating(User user){
         return userRepository.findById(user.getId()).map(u -> {
             u.setMentorRating(user.getMentorRating());
-            u.setUpdatedAt(user.getUpdatedAt());
             return userRepository.save(u);
         });
     }
@@ -57,7 +56,6 @@ public class UserService {
     public Optional<User> updateMenteeRating(User user){
         return userRepository.findById(user.getId()).map(u -> {
             u.setMenteeRating(user.getMenteeRating());
-            u.setUpdatedAt(user.getUpdatedAt());
             return userRepository.save(u);
         });
     }
