@@ -1,15 +1,8 @@
 package dev.abhinavreddy.guruva.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.mongodb.MongoDatabaseFactory;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
-import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -36,9 +29,10 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> createUser(@RequestBody User user){
+    public ResponseEntity<User> createUser(@RequestBody User user){
         System.out.println("Inside create user: " + user);
-        Map<String, Object> newUser = userService.createUser(user);
+
+        User newUser = userService.createUser(user);
         return ResponseEntity.ok(newUser);
     }
 }

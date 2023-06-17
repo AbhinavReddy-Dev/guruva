@@ -1,5 +1,7 @@
 package dev.abhinavreddy.guruva.mentee;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import dev.abhinavreddy.guruva.customtypes.LearningMode;
 import dev.abhinavreddy.guruva.customtypes.Skill;
 import dev.abhinavreddy.guruva.user.User;
@@ -24,6 +26,7 @@ import java.util.List;
 @Document(collection = "mentee")
 public class Mentee {
     @Id
+    @JsonSerialize(using= ToStringSerializer.class)
     private ObjectId id;
     @NonNull
     @DocumentReference(db = "guruva", collection = "user")

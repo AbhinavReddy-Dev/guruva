@@ -2,7 +2,6 @@ package dev.abhinavreddy.guruva.user;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -14,10 +13,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Map<String, Object> createUser(User user) {
+    public User createUser(User user) {
         user.setUserToken(generateNewToken(user.getUsername()));
-        User newUser = userRepository.save(user);
-        return newUser.getUserDetails();
+        return userRepository.save(user);
     }
 
     public Optional<User> getUser(String username) {

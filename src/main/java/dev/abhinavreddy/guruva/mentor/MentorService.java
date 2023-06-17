@@ -26,28 +26,31 @@ public class MentorService {
         // set user as mentor
         User user = userRepository.findByUsernameForProfile(username).orElse(null);
         assert user != null;
+
         mentor.setMentor(user);
+        System.out.println(mentor);
         // update mentor with user
-        return mentorRepository.insert(mentor);
+        return mentorRepository.save(mentor);
     }
 
 //    save mentee based on mentor objectId and mentee username using mongo template
-    public Mentor createMenteeForMentor(ObjectId mentorId, String menteeUserName) {
+    public Mentee createMenteeForMentor(ObjectId mentorId, String menteeUserName) {
+
         Mentor mentor = mentorRepository.findById(mentorId).orElse(null);
         assert mentor != null;
-        // set user as mentee
+
+        // Mentee object to be created and saved in mentee collection from mentor details
+        Mentee mentee = new Mentee();
         User user = userRepository.findByUsernameForProfile(menteeUserName).orElse(null);
         assert user != null;
-
-        // Mentee object to be created and saved in mentee collection
-        Mentee mentee = new Mentee();
         mentee.setMentee(user);
         mentee.setMentor(mentor.getMentor());
         mentee.setLearningMode(mentor.getLearningMode());
         mentee.setSkills(mentor.getSkills());
-        mongoTemplate.save(mentee, "mentee");
-        // update mentor with user
-        return mentorRepository.save(mentor);
+        mentee.setIsClosed(true);
+        //  mongoTemplate.save(mentee, "mentee");
+        menteeRepository.save(mentee);
+        return mentee;
     }
 
 //    get all mentors not deleted

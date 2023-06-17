@@ -8,6 +8,7 @@
 
 ### To run the project
 
-Add --add-opens java.base/java.time=ALL-UNNAMED to VM options in run configuration
+Add `--add-opens java.base/java.time=ALL-UNNAMED` to VM options in run configuration
 
-[//]: # (TODO: Add mentor and mentee record)
+### Access Postman Collection for latest API updates
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://api.postman.com/collections/18473491-28e69f41-3914-49f5-ad19-a5914b506b70?access_key=PMAT-01H36PVV2FNKR8BPG3H7D96QP4)

@@ -26,17 +26,18 @@ import java.util.Optional;
 @EnableMongoAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 public class MongoConfiguration {
 
-
+//  Mongo URI is stored in application.properties
     @Value("${spring.data.mongodb.uri}")
     private String mongoUri;
 
+//  SimpleMongoClientDatabaseFactory is used for connecting to MongoDB
     @Bean
     public MongoDatabaseFactory mongoDatabaseFactory() {
         MongoClient mongoClient = MongoClients.create(mongoUri);
         return new SimpleMongoClientDatabaseFactory(mongoClient, "guruva");
     }
 
-
+//  For disabling the _class column in MongoDB
     @Bean
     public MappingMongoConverter mappingMongoConverter(MongoCustomConversions conversions) {
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDatabaseFactory()), new MongoMappingContext());
@@ -45,6 +46,7 @@ public class MongoConfiguration {
         return converter;
     }
 
+//    For auditing the created and updated_at fields
     @Bean(name = "auditingDateTimeProvider")
     public DateTimeProvider dateTimeProvider() {
         return () -> Optional.of(LocalDateTime.now());

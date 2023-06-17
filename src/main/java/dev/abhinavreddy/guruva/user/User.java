@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import dev.abhinavreddy.guruva.customtypes.*;
@@ -19,6 +20,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @RequiredArgsConstructor(staticName = "of")
 @NoArgsConstructor
+@JsonIgnoreProperties({"password", "userToken"})
 @Document(collection = "user")
 public class User {
         @Id
@@ -49,27 +51,29 @@ public class User {
         private LocalDateTime updatedAt;
 
 // public method to return user details without password
-public Map<String, Object> getUserDetails() {
-        Map<String, Object> userDetails = new HashMap<>();
-
-        userDetails.put("id", this.id);
-        userDetails.put("username", this.username);
-        userDetails.put("fullName", this.fullName);
-        userDetails.put("gender", this.gender);
-        userDetails.put("email", this.email);
-        userDetails.put("userToken", this.userToken);
-        userDetails.put("photo", this.photo);
-        userDetails.put("languagesSpoken", this.languagesSpoken);
-        userDetails.put("country", this.country);
-        userDetails.put("externalLinks", this.externalLinks);
-        userDetails.put("experience", this.experience);
-        userDetails.put("skills", this.skills);
-        userDetails.put("mentorRating", this.mentorRating);
-        userDetails.put("menteeRating", this.menteeRating);
-        userDetails.put("createdAt", this.createdAt);
-        userDetails.put("updatedAt", this.updatedAt);
-        return userDetails;
-}
+//public Map<String, Object> getUserDetails() {
+//
+//        Map<String, Object> userDetails = new HashMap<>();
+//
+//        userDetails.put("id", this.id);
+//        userDetails.put("username", this.username);
+//        userDetails.put("fullName", this.fullName);
+//        userDetails.put("gender", this.gender);
+//        userDetails.put("email", this.email);
+//        userDetails.put("userToken", this.userToken);
+//        userDetails.put("photo", this.photo);
+//        userDetails.put("languagesSpoken", this.languagesSpoken);
+//        userDetails.put("country", this.country);
+//        userDetails.put("externalLinks", this.externalLinks);
+//        userDetails.put("experience", this.experience);
+//        userDetails.put("skills", this.skills);
+//        userDetails.put("mentorRating", this.mentorRating);
+//        userDetails.put("menteeRating", this.menteeRating);
+//        userDetails.put("createdAt", this.createdAt);
+//        userDetails.put("updatedAt", this.updatedAt);
+//
+//        return userDetails;
+//}
 
 
 }

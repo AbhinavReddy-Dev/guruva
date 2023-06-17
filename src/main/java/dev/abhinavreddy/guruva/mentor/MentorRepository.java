@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.repository.Query;
 
 public interface MentorRepository extends MongoRepository<Mentor, ObjectId> {
 
-//    query all records where isDeleted is false
+//  Query all records where isDeleted is false
     @Query(value = "{ 'isDeleted' : false }")
     Iterable<Mentor> findAllByIsDeletedFalse();
 

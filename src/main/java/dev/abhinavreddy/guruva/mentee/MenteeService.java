@@ -7,9 +7,11 @@ import dev.abhinavreddy.guruva.user.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+@Service
 public class MenteeService {
     private final MenteeRepository menteeRepository;
     private final UserRepository userRepository;
@@ -34,38 +36,30 @@ public class MenteeService {
     }
 
 // Add Mentor by username and create mentor based on Mentee details using mongo template
-    public Mentee addMentorByRequest(String mentorUserName, ObjectId menteeId) {
+    public Mentor createMentorForMentee( ObjectId menteeId, String mentorUserName) {
         Mentee mentee = menteeRepository.findById(menteeId).orElse(null);
         assert mentee != null;
-        // set user as mentor
+
+        // create mentor based on mentee details
         User user = userRepository.findByUsernameForProfile(mentorUserName).orElse(null);
         assert user != null;
-        mentee.setMentor(user);
-        mentee.setIsClosed(true);
 
         // Mentor object to be created and saved in mentor collection
         Mentor mentor = new Mentor();
         mentor.setMentor(user);
-        mentor.setLearningMode(mentee.getLearningMode());
         mentor.setSkills(mentee.getSkills());
-        mongoTemplate.save(mentor, "mentor");
-        // update mentee with user
-        return menteeRepository.save(mentee);
-    }
+        mentor.setLearningMode(mentee.getLearningMode());
+        mentor.setIsAvailable(true);
+        mentorRepository.save(mentor);
 
-
-// add mentor to mentee
-    public Mentee addMentorToMentee(ObjectId menteeId, String username) {
-        Mentee mentee = menteeRepository.findById(menteeId).orElse(null);
-        assert mentee != null;
-        User user = userRepository.findByUsernameForProfile(username).orElse(null);
-        assert user != null;
-        mentee.setMentor(user);
+        // update mentee with mentor
+        mentee.setMentor(mentor.getMentor());
         mentee.setIsClosed(true);
-        return menteeRepository.save(mentee);
+        menteeRepository.save(mentee);
+        return mentor;
     }
 
-// update mentee skills or learningmode
+// update mentee skills or learningMode
     public Mentee updateMentee(Mentee mentee, ObjectId menteeId) {
         Mentee mentee1 = menteeRepository.findById(menteeId).orElse(null);
         assert mentee1 != null;
@@ -121,7 +115,6 @@ public class MenteeService {
         return menteeRepository.findAllByLearningMode(learningMode);
     }
 
-//
 // delete mentee from user view
     public Mentee deleteMentee(ObjectId id) {
         Mentee mentee = menteeRepository.findById(id).orElse(null);
