@@ -1,7 +1,7 @@
 package dev.abhinavreddy.guruva.mentee;
 
-import dev.abhinavreddy.guruva.customtypes.CreateMentee;
-import dev.abhinavreddy.guruva.customtypes.CreateMentorForMentee;
+import dev.abhinavreddy.guruva.reqbodytypes.CreateMentee;
+import dev.abhinavreddy.guruva.reqbodytypes.CreateMentorForMentee;
 import dev.abhinavreddy.guruva.mentor.Mentor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

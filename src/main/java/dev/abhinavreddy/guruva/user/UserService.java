@@ -1,5 +1,6 @@
 package dev.abhinavreddy.guruva.user;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,9 +14,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createUser(User user) {
-        user.setUserToken(generateNewToken(user.getUsername()));
-        return userRepository.save(user);
+    public User createUser(User user) throws Exception {
+        if (getUser(user.getUsername()).isPresent()) {
+            throw new DuplicateKeyException("User already exists");
+        }
+        try {
+            user.setUserToken(generateNewToken(user.getUsername()));
+            return userRepository.save(user);
+        }
+        catch (Exception e) {
+            throw new Exception("Error creating user");
+        }
     }
 
     public Optional<User> getUser(String username) {

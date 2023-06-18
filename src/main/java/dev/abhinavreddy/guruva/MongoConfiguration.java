@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "dev.abhinavreddy.guruva")
+@EnableMongoRepositories()
 @EnableMongoAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 public class MongoConfiguration {
 

@@ -1,19 +1,13 @@
 package dev.abhinavreddy.guruva.mentor;
 
-import dev.abhinavreddy.guruva.customtypes.*;
 import dev.abhinavreddy.guruva.mentee.Mentee;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.Document;
+import dev.abhinavreddy.guruva.reqbodytypes.CreateMenteeForMentor;
+import dev.abhinavreddy.guruva.reqbodytypes.CreateMentor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/mentor")

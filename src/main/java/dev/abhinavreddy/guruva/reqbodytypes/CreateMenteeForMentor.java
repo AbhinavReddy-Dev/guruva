@@ -1,4 +1,4 @@
-package dev.abhinavreddy.guruva.customtypes;
+package dev.abhinavreddy.guruva.reqbodytypes;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,5 +1,6 @@
 package dev.abhinavreddy.guruva.user;
 
+import dev.abhinavreddy.guruva.reqres.ResponseBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,10 +30,14 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody User user){
+    public ResponseEntity<ResponseBody> createUser(@RequestBody User user) throws Exception {
         System.out.println("Inside create user: " + user);
-
-        User newUser = userService.createUser(user);
-        return ResponseEntity.ok(newUser);
+//        try{
+            User newUser = userService.createUser(user);
+            ResponseBody responseBody = new ResponseBody("User created successfully", false,200, newUser);
+            return ResponseEntity.ok(responseBody);
+//        } catch (org.springframework.dao.IncorrectResultSizeDataAccessException e) {
+//          throw new Exception("User already exists");
+//        }
     }
 }

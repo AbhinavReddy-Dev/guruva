@@ -14,6 +14,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -27,6 +28,7 @@ public class User {
         @JsonSerialize(using= ToStringSerializer.class)
         private ObjectId id;
         @NonNull
+        @Indexed(unique = true)
         private String username;
         @NonNull
         private String password;
@@ -43,8 +45,8 @@ public class User {
         private List<String> externalLinks;
         private List<Experience> experience;
         private List<Skill> skills;
-        private Integer mentorRating;
-        private Integer menteeRating;
+        private Float mentorRating;
+        private Float menteeRating;
         @CreatedDate
         private LocalDateTime createdAt;
         @LastModifiedDate
