@@ -3,6 +3,7 @@ package dev.abhinavreddy.guruva.mentor;
 import dev.abhinavreddy.guruva.mentee.Mentee;
 import dev.abhinavreddy.guruva.reqbodytypes.CreateMenteeForMentor;
 import dev.abhinavreddy.guruva.reqbodytypes.CreateMentor;
+import dev.abhinavreddy.guruva.reqres.ResponseBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,9 +32,11 @@ public class MentorController {
     }
 
     @PostMapping("/create_mentee_for_mentor")
-    public ResponseEntity<Mentee> createMenteeForMentor(@RequestBody CreateMenteeForMentor requestBody){
+    public ResponseEntity<Object> createMenteeForMentor(@RequestBody CreateMenteeForMentor requestBody) throws Exception {
         System.out.println("Inside create mentee for mentor: " + requestBody.getMentorId() + " " + requestBody.getMenteeUsername());
+//
         Mentee newMentee = mentorService.createMenteeForMentor(requestBody.getMentorId(), requestBody.getMenteeUsername());
-        return ResponseEntity.ok(newMentee);
+        ResponseBody responseBody = new ResponseBody("Mentee created successfully!", false, org.springframework.http.HttpStatus.OK, newMentee);
+        return ResponseEntity.ok(responseBody);
     }
 }

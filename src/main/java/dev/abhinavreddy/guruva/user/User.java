@@ -21,7 +21,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @RequiredArgsConstructor(staticName = "of")
 @NoArgsConstructor
-@JsonIgnoreProperties({"password", "userToken"})
+@JsonIgnoreProperties({"password", "userToken", "isDeleted"})
 @Document(collection = "user")
 public class User {
         @Id
@@ -51,6 +51,7 @@ public class User {
         private LocalDateTime createdAt;
         @LastModifiedDate
         private LocalDateTime updatedAt;
+        private Boolean isDeleted = false;
 
 // public method to return user details without password
 //public Map<String, Object> getUserDetails() {

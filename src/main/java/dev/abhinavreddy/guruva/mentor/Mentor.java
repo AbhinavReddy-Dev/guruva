@@ -1,5 +1,6 @@
 package dev.abhinavreddy.guruva.mentor;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import dev.abhinavreddy.guruva.customtypes.LearningMode;
@@ -17,10 +18,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-@NoArgsConstructor
 @Document(collection = "mentor")
+@JsonIgnoreProperties({"isDeleted"})
 public class Mentor {
     @Id
     @JsonSerialize(using= ToStringSerializer.class)

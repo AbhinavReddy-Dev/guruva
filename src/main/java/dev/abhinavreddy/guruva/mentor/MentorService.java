@@ -24,7 +24,7 @@ public class MentorService {
 //    create mentor
     public Mentor createMentor(Mentor mentor, String username) {
         // set user as mentor
-        User user = userRepository.findByUsernameForProfile(username).orElse(null);
+        User user = userRepository.getByUsernameForProfile(username).orElse(null);
         assert user != null;
 
         mentor.setMentor(user);
@@ -34,15 +34,24 @@ public class MentorService {
     }
 
 //    save mentee based on mentor objectId and mentee username using mongo template
-    public Mentee createMenteeForMentor(ObjectId mentorId, String menteeUserName) {
-
-        Mentor mentor = mentorRepository.findById(mentorId).orElse(null);
-        assert mentor != null;
-
+    public Mentee createMenteeForMentor(ObjectId mentorId, String menteeUserName) throws Exception {
+        Mentor mentor;
+        User user;
+        try {
+            mentor = mentorRepository.findById(mentorId).orElse(null);
+            assert mentor != null;
+        }
+        catch (Exception e) {
+            throw new Exception("Mentor entry not found.");
+        }
         // Mentee object to be created and saved in mentee collection from mentor details
+        try {
+            user = userRepository.getByUsernameForProfile(menteeUserName).orElse(null);
+            assert user != null;
+        } catch (Exception e) {
+            throw new Exception("Mentee user not found: " + menteeUserName);
+        }
         Mentee mentee = new Mentee();
-        User user = userRepository.findByUsernameForProfile(menteeUserName).orElse(null);
-        assert user != null;
         mentee.setMentee(user);
         mentee.setMentor(mentor.getMentor());
         mentee.setLearningMode(mentor.getLearningMode());
@@ -60,7 +69,7 @@ public class MentorService {
 
 //    get all mentors by username
     public Iterable<Mentor> getAllMentorsByUsername(String username) {
-        User user = userRepository.findByUsernameForProfile(username).orElse(null);
+        User user = userRepository.getByUsernameForProfile(username).orElse(null);
         return mentorRepository.findAllByMentor(user);
     }
 

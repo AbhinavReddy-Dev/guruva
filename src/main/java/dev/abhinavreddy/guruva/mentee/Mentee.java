@@ -1,5 +1,6 @@
 package dev.abhinavreddy.guruva.mentee;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import dev.abhinavreddy.guruva.customtypes.LearningMode;
@@ -24,6 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "mentee")
+@JsonIgnoreProperties({"isDeleted"})
 public class Mentee {
     @Id
     @JsonSerialize(using= ToStringSerializer.class)
