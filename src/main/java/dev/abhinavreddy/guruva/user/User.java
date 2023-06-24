@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.filter.TokenFilter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import dev.abhinavreddy.guruva.customtypes.*;
@@ -16,12 +18,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.validation.annotation.Validated;
 
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor(staticName = "of")
 @NoArgsConstructor
-@JsonIgnoreProperties({"password", "userToken", "isDeleted"})
+@JsonIgnoreProperties({"userToken", "isDeleted"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "user")
 public class User {
         @Id
@@ -53,8 +57,8 @@ public class User {
         private LocalDateTime updatedAt;
         private Boolean isDeleted = false;
 
-// public method to return user details without password
-//public Map<String, Object> getUserDetails() {
+//  public method to return user details without password
+//  public Map<String, Object> getUserDetails() {
 //
 //        Map<String, Object> userDetails = new HashMap<>();
 //

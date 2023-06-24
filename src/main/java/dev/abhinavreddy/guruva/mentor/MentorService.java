@@ -24,7 +24,7 @@ public class MentorService {
 //    create mentor
     public Mentor createMentor(Mentor mentor, String username) {
         // set user as mentor
-        User user = userRepository.getByUsernameForProfile(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElse(null);
         assert user != null;
 
         mentor.setMentor(user);
@@ -46,7 +46,7 @@ public class MentorService {
         }
         // Mentee object to be created and saved in mentee collection from mentor details
         try {
-            user = userRepository.getByUsernameForProfile(menteeUserName).orElse(null);
+            user = userRepository.findByUsername(menteeUserName).orElse(null);
             assert user != null;
         } catch (Exception e) {
             throw new Exception("Mentee user not found: " + menteeUserName);
@@ -69,7 +69,7 @@ public class MentorService {
 
 //    get all mentors by username
     public Iterable<Mentor> getAllMentorsByUsername(String username) {
-        User user = userRepository.getByUsernameForProfile(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElse(null);
         return mentorRepository.findAllByMentor(user);
     }
 

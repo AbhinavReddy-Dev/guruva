@@ -5,11 +5,8 @@ import dev.abhinavreddy.guruva.mentor.MentorRepository;
 import dev.abhinavreddy.guruva.user.User;
 import dev.abhinavreddy.guruva.user.UserRepository;
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Service
 public class MenteeService {
@@ -28,7 +25,7 @@ public class MenteeService {
 // create mentee
     public Mentee createMentee(Mentee mentee, String username) {
         // set user as mentee
-        User user = userRepository.getByUsernameForProfile(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElse(null);
         assert user != null;
         mentee.setMentee(user);
         // update mentee with user
@@ -41,7 +38,7 @@ public class MenteeService {
         assert mentee != null;
 
         // create mentor based on mentee details
-        User user = userRepository.getByUsernameForProfile(mentorUserName).orElse(null);
+        User user = userRepository.findByUsername(mentorUserName).orElse(null);
         assert user != null;
 
         // Mentor object to be created and saved in mentor collection
@@ -102,12 +99,12 @@ public class MenteeService {
 
 // get all mentees by mentee username
     public Iterable<Mentee> getAllMenteesByMenteeUsername(String username) {
-        return menteeRepository.findAllByMentee(userRepository.getByUsernameForProfile(username).orElse(null));
+        return menteeRepository.findAllByMentee(userRepository.findByUsername(username).orElse(null));
     }
 
 // get all mentees by mentor username
     public Iterable<Mentee> getAllMenteesByMentorUsername(String username) {
-        return menteeRepository.findAllByMentor(userRepository.getByUsernameForProfile(username).orElse(null));
+        return menteeRepository.findAllByMentor(userRepository.findByUsername(username).orElse(null));
     }
 
 // get all by learningMode
