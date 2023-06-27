@@ -149,7 +149,7 @@ public class UserService {
             throw e;
         }
         catch (Exception e) {
-            throw new Exception("Error updating password. " + e.getLocalizedMessage());
+            throw new Exception("Error: " + e.getLocalizedMessage());
         }
     }
 
@@ -169,9 +169,7 @@ public class UserService {
 
     public Boolean deleteUser(String username) throws UserNotFound {
         try {
-
             User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFound("User not found: " + username));
-
             Query query = new Query().addCriteria(Criteria.where("username").is(username));
             Update update = new Update();
             update.set("isDeleted", true);
@@ -195,7 +193,7 @@ public class UserService {
         return token.toString();
     }
 
-    public Boolean verifyPasswordStrength(String password){
+    public Boolean verifyPasswordStrength(String password){ // ✅
         return password.length() < 8 || password.length() > 20 || !password.matches(".*\\d.*") || !password.matches(".*[!@#$%^&*].*") || !password.matches(".*[A-Z].*") || !password.matches(".*[a-z].*");
     }
 }

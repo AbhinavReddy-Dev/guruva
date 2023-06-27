@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -17,19 +16,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/") // ✅
     public String test() {
         return "Hello World";
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/{username}") // ✅
     public ResponseEntity<ResponseBody> getUser(@PathVariable String username) {
             User user = userService.getUser(username);
            ResponseBody responseBody = new ResponseBody("User found!", false, HttpStatus.OK, user);
               return ResponseEntity.ok(responseBody);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create") // ✅
     public ResponseEntity<ResponseBody> createUser(@RequestBody User user) throws Exception {
         System.out.println("Inside create user: " + user);
 
@@ -39,7 +38,7 @@ public class UserController {
     }
 
 //    update user
-    @PatchMapping("/update")
+    @PatchMapping("/update") // ✅
     public ResponseEntity<ResponseBody> updateUser(@RequestBody User user) throws Exception {
         System.out.println("Inside controller: " + user);
         User newUser = userService.updateUser(user);
@@ -47,7 +46,7 @@ public class UserController {
         return ResponseEntity.ok(responseBody);
     }
 
-    @PatchMapping("/update/username")
+    @PatchMapping("/update/username") // ✅
     public ResponseEntity<ResponseBody> updateUsername(@RequestBody Map<String, String> usernames) throws Exception {
         System.out.println("Inside controller: " + usernames);
         User newUser = userService.updateUsername(usernames.get("oldUsername"), usernames.get("newUsername"));
@@ -55,7 +54,7 @@ public class UserController {
         return ResponseEntity.ok(responseBody);
     }
 
-    @PatchMapping("/update/password")
+    @PatchMapping("/update/password") // ✅
     public ResponseEntity<ResponseBody> updatePassword(@RequestBody Map<String, String> passwords) throws Exception {
         System.out.println("Inside controller: " + passwords);
         userService.updatePassword(passwords.get("username"), passwords.get("newPassword"));

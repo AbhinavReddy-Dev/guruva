@@ -17,7 +17,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class Mentee {
     private List<Skill> skills;
     @NonNull
     private LearningMode learningMode;
-    private Boolean isClosed = false;
+    private Boolean isOpen = true;
     private Boolean isDeleted = false;
 }
 // dummy data

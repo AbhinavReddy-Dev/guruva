@@ -51,7 +51,7 @@ public class MenteeService {
 
         // update mentee with mentor
         mentee.setMentor(mentor.getMentor());
-        mentee.setIsClosed(true);
+        mentee.setIsOpen(true);
         menteeRepository.save(mentee);
         return mentor;
     }
@@ -70,7 +70,7 @@ public class MenteeService {
         Mentee mentee = menteeRepository.findById(menteeId).orElse(null);
         assert mentee != null;
         mentee.setMentor(null);
-        mentee.setIsClosed(false);
+        mentee.setIsOpen(false);
         return menteeRepository.save(mentee);
     }
 
@@ -78,7 +78,7 @@ public class MenteeService {
     public Mentee closeMentee(ObjectId id) {
         Mentee mentee = menteeRepository.findById(id).orElse(null);
         assert mentee != null;
-        mentee.setIsClosed(true);
+        mentee.setIsOpen(true);
         return menteeRepository.save(mentee);
     }
 
