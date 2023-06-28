@@ -13,6 +13,6 @@ Add `--add-opens java.base/java.time=ALL-UNNAMED` to VM options in run configura
 ### Access Postman Collection for latest API updates
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://api.postman.com/collections/18473491-28e69f41-3914-49f5-ad19-a5914b506b70?access_key=PMAT-01H36PVV2FNKR8BPG3H7D96QP4)
 
-[//]: # (Getters and Updaters of User, Mentor and Mentee, following exception handling & best practices)
-[//]: # (Add a new Rating document class)
+[//]: # (Getters and Updaters of User ✅, Mentor and Mentee, following exception handling & best practices)
+[//]: # (Add a new Rating document class for mentee and mentor)
 [//]: # (Notification system for Mentee and Mentor)

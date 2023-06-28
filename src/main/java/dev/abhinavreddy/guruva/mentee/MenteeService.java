@@ -5,7 +5,6 @@ import dev.abhinavreddy.guruva.mentor.MentorRepository;
 import dev.abhinavreddy.guruva.user.User;
 import dev.abhinavreddy.guruva.user.UserRepository;
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,13 +12,11 @@ public class MenteeService {
     private final MenteeRepository menteeRepository;
     private final UserRepository userRepository;
     private final MentorRepository mentorRepository;
-    private final MongoTemplate mongoTemplate;
 // constructor injection for menteeRepository and userRepository
-    public MenteeService(MenteeRepository menteeRepository, UserRepository userRepository, MentorRepository mentorRepository, MongoTemplate mongoTemplate) {
+    public MenteeService(MenteeRepository menteeRepository, UserRepository userRepository, MentorRepository mentorRepository) {
         this.menteeRepository = menteeRepository;
         this.userRepository = userRepository;
         this.mentorRepository = mentorRepository;
-        this.mongoTemplate = mongoTemplate;
     }
 
 // create mentee
@@ -33,91 +30,111 @@ public class MenteeService {
     }
 
 // Add Mentor by username and create mentor based on Mentee details using mongo template
-    public Mentor createMentorForMentee( ObjectId menteeId, String mentorUserName) {
-        Mentee mentee = menteeRepository.findById(menteeId).orElse(null);
-        assert mentee != null;
+    public Mentor createMentorForMentee( ObjectId menteeId, String mentorUserName) throws Exception {
+        try {
+            Mentee mentee = menteeRepository.findById(menteeId).orElseThrow(() -> new Exception("Mentee not found: " + menteeId));
+            assert mentee != null;
 
-        // create mentor based on mentee details
-        User user = userRepository.findByUsername(mentorUserName).orElse(null);
-        assert user != null;
+            // create mentor based on mentee details
+            User user = userRepository.findByUsername(mentorUserName).orElseThrow(() -> new Exception("Mentor user not found: " + mentorUserName));
+            assert user != null;
 
-        // Mentor object to be created and saved in mentor collection
-        Mentor mentor = new Mentor();
-        mentor.setMentor(user);
-        mentor.setSkills(mentee.getSkills());
-        mentor.setLearningMode(mentee.getLearningMode());
-        mentor.setIsAvailable(true);
-        mentorRepository.save(mentor);
+            // Mentor object to be created and saved in mentor collection
+            Mentor mentor = new Mentor();
+            mentor.setMentor(user);
+            mentor.setSkills(mentee.getSkills());
+            mentor.setLearningMode(mentee.getLearningMode());
+            mentor.setIsAvailable(true);
+            mentorRepository.save(mentor);
 
-        // update mentee with mentor
-        mentee.setMentor(mentor.getMentor());
-        mentee.setIsOpen(true);
-        menteeRepository.save(mentee);
-        return mentor;
+            // update mentee with mentor
+            mentee.setMentor(mentor.getMentor());
+            mentee.setIsOpen(true);
+            menteeRepository.save(mentee);
+            return mentor;
+        }
+        catch (Exception e){
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
 
-// update mentee skills or learningMode
-    public Mentee updateMentee(Mentee mentee, ObjectId menteeId) {
-        Mentee mentee1 = menteeRepository.findById(menteeId).orElse(null);
-        assert mentee1 != null;
-        mentee1.setLearningMode(mentee.getLearningMode());
-        mentee1.setSkills(mentee.getSkills());
-        return menteeRepository.save(mentee1);
+    // get mentee by id
+    public Mentee getMenteeById(ObjectId id) throws Exception {
+        try{
+            return menteeRepository.findById(id).orElseThrow(() -> new Exception("Mentee not found: " + id));
+        }
+        catch (Exception e){
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
 
-//    remove mentor and update isClosed to false
-    public Mentee removeMentor(ObjectId menteeId) {
-        Mentee mentee = menteeRepository.findById(menteeId).orElse(null);
-        assert mentee != null;
-        mentee.setMentor(null);
-        mentee.setIsOpen(false);
-        return menteeRepository.save(mentee);
+    // get all mentees by mentee username
+    public Iterable<Mentee> getAllMenteesByMenteeUsername(String username) throws Exception {
+        try {
+            return menteeRepository.findAllByMentee(userRepository.findByUsername(username).orElseThrow( () -> new Exception("User not found: " + username)));
+        }
+        catch (Exception e){
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
+    }
+
+//    get all deleted by mentee username
+    public Iterable<Mentee> getAllDeletedByMenteeUsername(String username) throws Exception {
+        try {
+            return menteeRepository.findAllDeletedByMentee(userRepository.findByUsername(username).orElseThrow( () -> new Exception("User not found: " + username)));
+        }
+        catch (Exception e){
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
+    }
+
+// remove mentor and update isClosed to false
+    public Mentee removeMentor(ObjectId menteeId) throws Exception {
+        try {
+            Mentee mentee = menteeRepository.findById(menteeId).orElseThrow(() -> new Exception("Mentee not found: " + menteeId));
+            assert mentee != null;
+            //  TODO: check if logged-in user and mentee are the same before removing mentor, else throw an exception
+            if(mentee.getMentor() != null) {
+                mentee.setMentor(null);
+                mentee.setIsOpen(true);
+                return menteeRepository.save(mentee);
+            }
+            else {
+                throw new Exception("Mentor not found to remove for mentee: " + menteeId);
+            }
+
+        }
+        catch (Exception e){
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
 
 // close mentee
-    public Mentee closeMentee(ObjectId id) {
-        Mentee mentee = menteeRepository.findById(id).orElse(null);
-        assert mentee != null;
-        mentee.setIsOpen(true);
-        return menteeRepository.save(mentee);
+    public Mentee closeMentee(ObjectId id) throws Exception {
+        try {
+            Mentee mentee = menteeRepository.findById(id).orElseThrow( () -> new Exception("Mentee not found: " + id));
+            assert mentee != null;
+//  TODO: check if logged-in user and mentee are the same before closing, else throw an exception
+            mentee.setIsOpen(false);
+            return menteeRepository.save(mentee);
+        }
+        catch (Exception e){
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
 
-// get mentee by id
-    public Mentee getMentee(ObjectId id) {
-        return menteeRepository.findById(id).orElse(null);
-    }
-
-// get all mentees without mentor
-    public Iterable<Mentee> getAllMenteesWithoutMentor() {
-        return menteeRepository.findAllByMentorNull();
-    }
-
-// get all isClosed False mentees
-    public Iterable<Mentee> getAllOpenMentees() {
-        return menteeRepository.findAllByIsClosedFalse();
-    }
-
-// get all mentees by mentee username
-    public Iterable<Mentee> getAllMenteesByMenteeUsername(String username) {
-        return menteeRepository.findAllByMentee(userRepository.findByUsername(username).orElse(null));
-    }
-
-// get all mentees by mentor username
-    public Iterable<Mentee> getAllMenteesByMentorUsername(String username) {
-        return menteeRepository.findAllByMentor(userRepository.findByUsername(username).orElse(null));
-    }
-
-// get all by learningMode
-    public Iterable<Mentee> getAllMenteesByLearningMode(String learningMode) {
-        return menteeRepository.findAllByLearningMode(learningMode);
-    }
-
-// delete mentee from user view
-    public Mentee deleteMentee(ObjectId id) {
-        Mentee mentee = menteeRepository.findById(id).orElse(null);
-        assert mentee != null;
-        mentee.setIsDeleted(true);
-        return menteeRepository.save(mentee);
+// delete mentee
+    public Mentee deleteMentee(ObjectId id) throws Exception {
+        try {
+            Mentee mentee = menteeRepository.findById(id).orElse(null);
+            assert mentee != null;
+            //  TODO: check if logged-in user and mentee are the same before deleting, else throw an exception
+            mentee.setIsDeleted(true);
+            return menteeRepository.save(mentee);
+        }
+        catch (Exception e){
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
 
 }

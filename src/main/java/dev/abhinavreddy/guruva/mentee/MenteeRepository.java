@@ -6,23 +6,13 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 public interface MenteeRepository extends MongoRepository<Mentee, ObjectId> {
-//  Query all records where mentor is null
-    @Query(value = "{ 'mentor' : null }")
-    Iterable<Mentee> findAllByMentorNull();
-
-//  Query all records with isClosed false
-    @Query(value = "{ 'isClosed' : false }")
-    Iterable<Mentee> findAllByIsClosedFalse();
 
 //  Query all records where mentee is user
-    @Query(value = "{ 'mentee' : ?0 }")
+    @Query(value = "{ 'mentee' : ?0, isDeleted: false }")
     Iterable<Mentee> findAllByMentee(User mentee);
 
-//  Query all records where mentor is user
-    @Query(value = "{ 'mentor' : ?0 }")
-    Iterable<Mentee> findAllByMentor(User mentor);
+//  Query all deleted records where mentee is user
+    @Query(value = "{ 'mentee' : ?0, isDeleted: true }")
+    Iterable<Mentee> findAllDeletedByMentee(User mentee);
 
-//  Query to find all records with learningMode
-    @Query(value = "{ 'learningMode' : ?0 }")
-    Iterable<Mentee> findAllByLearningMode(String learningMode);
 }

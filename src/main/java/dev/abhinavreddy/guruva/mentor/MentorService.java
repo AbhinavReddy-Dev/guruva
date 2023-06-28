@@ -1,5 +1,6 @@
 package dev.abhinavreddy.guruva.mentor;
 
+import dev.abhinavreddy.guruva.exceptions.UserNotFound;
 import dev.abhinavreddy.guruva.mentee.Mentee;
 import dev.abhinavreddy.guruva.mentee.MenteeRepository;
 import dev.abhinavreddy.guruva.user.User;
@@ -35,66 +36,108 @@ public class MentorService {
 
 //    save mentee based on mentor objectId and mentee username using mongo template
     public Mentee createMenteeForMentor(ObjectId mentorId, String menteeUserName) throws Exception {
-        Mentor mentor;
-        User user;
-        try {
-            mentor = mentorRepository.findById(mentorId).orElse(null);
+        try {        // TODO: check if logged in username is mentee username
+            Mentor mentor = mentorRepository.findById(mentorId).orElseThrow(() -> new Exception("Mentor not found: " + mentorId));
             assert mentor != null;
+            // Mentee object to be created and saved in mentee collection from mentor details
+            User user = userRepository.findByUsername(menteeUserName).orElseThrow(() -> new UserNotFound("Mentee user not found: " + menteeUserName));
+
+            Mentee mentee = new Mentee();
+            mentee.setMentee(user);
+            mentee.setMentor(mentor.getMentor());
+            mentee.setLearningMode(mentor.getLearningMode());
+            mentee.setSkills(mentor.getSkills());
+            mentee.setIsOpen(true);
+            //  mongoTemplate.save(mentee, "mentee");
+            menteeRepository.save(mentee);
+            return mentee;
+        }
+        catch(UserNotFound e){
+            throw e;
         }
         catch (Exception e) {
-            throw new Exception("Mentor entry not found.");
+            throw new Exception("Error: " + e.getLocalizedMessage());
         }
-        // Mentee object to be created and saved in mentee collection from mentor details
-        try {
-            user = userRepository.findByUsername(menteeUserName).orElse(null);
-            assert user != null;
-        } catch (Exception e) {
-            throw new Exception("Mentee user not found: " + menteeUserName);
-        }
-        Mentee mentee = new Mentee();
-        mentee.setMentee(user);
-        mentee.setMentor(mentor.getMentor());
-        mentee.setLearningMode(mentor.getLearningMode());
-        mentee.setSkills(mentor.getSkills());
-        mentee.setIsClosed(true);
-        //  mongoTemplate.save(mentee, "mentee");
-        menteeRepository.save(mentee);
-        return mentee;
     }
 
-//    get all mentors not deleted
-    public Iterable<Mentor> getAllMentors() {
-        return mentorRepository.findAllByIsDeletedFalse();
+//    get by mentor id
+    public Mentor getMentorById(ObjectId mentorId) throws Exception {
+        try {
+            return mentorRepository.findById(mentorId).orElseThrow(() -> new RuntimeException("Mentor not found."));
+        }
+        catch (Exception e) {
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
 
 //    get all mentors by username
-    public Iterable<Mentor> getAllMentorsByUsername(String username) {
-        User user = userRepository.findByUsername(username).orElse(null);
-        return mentorRepository.findAllByMentor(user);
+    public Iterable<Mentor> getAllMentorsByMentorUsername(String username) throws  Exception {
+        try {
+            User user = userRepository.findByUsername(username).orElseThrow(()->
+                    new RuntimeException("User not found."));
+            return mentorRepository.findAllByMentor(user);
+        }
+        catch (Exception e) {
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
 
-//    get all by learning mode
-    public Iterable<Mentor> getAllMentorsByLearningMode(String learningMode) {
-        return mentorRepository.findAllByLearningMode(learningMode);
+//    get all deleted mentors for user
+    public Iterable<Mentor> getAllDeletedMentorsByMentorUsername(String username) throws  Exception {
+        try {
+            User user = userRepository.findByUsername(username).orElseThrow(()->
+                    new Exception("User not found: " + username));
+//            TODO: check if logged in user is username
+            return mentorRepository.findAllDeletedByMentor(user);
+        }
+        catch (Exception e) {
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
 
-//    get all by is available
-    public Iterable<Mentor> getAllMentorsByIsAvailable() {
-        return mentorRepository.findAllByIsAvailableTrue();
+//    update mentor availability by mentorId
+    public Mentor updateMentorAvailability(ObjectId mentorId, Boolean isAvailable) throws Exception {
+        try {
+            Mentor mentor = mentorRepository.findById(mentorId).orElseThrow(() -> new Exception("Mentor not found: " + mentorId));
+            assert mentor != null;
+//            TODO: check if logged in user is mentor
+            mentor.setIsAvailable(isAvailable);
+            return mentorRepository.save(mentor);
+        } catch (Exception e) {
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
+//    remove mentee using mentorId and MenteeId
+    public Boolean removeMentorForMentee(ObjectId menteeId) throws Exception {
+        try {
 
-//    get all by rating
-    public Iterable<Mentor> getAllMentorsByRating(Integer rating) {
-        return mentorRepository.findAllByRating(rating);
+            Mentee mentee = menteeRepository.findById(menteeId).orElseThrow(() -> new Exception("Mentee not found: " + menteeId));
+            assert mentee != null;
+            if (mentee.getMentor() != null ) { // TODO: and check if logged in user is mentor of mentee
+                mentee.setMentor(null);
+                mentee.setIsOpen(true);
+                menteeRepository.save(mentee);
+                return true;
+            }
+            return false;
+        }
+        catch (Exception e) {
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
 
 //    delete mentor
-    public Mentor deleteMentor(ObjectId mentorId) {
-        Mentor mentor = mentorRepository.findById(mentorId).orElse(null);
-        assert mentor != null;
-        mentor.setIsAvailable(false);
-        mentor.setIsDeleted(true);
-
-        return mentorRepository.save(mentor);
+    public void deleteMentor(ObjectId mentorId) throws Exception {
+        try {
+            Mentor mentor = mentorRepository.findById(mentorId).orElseThrow( () -> new Exception("Mentor not found."));
+            assert mentor != null;
+            // TODO: check if logged in user is mentor
+            mentor.setIsAvailable(false);
+            mentor.setIsDeleted(true);
+            mentorRepository.save(mentor);
+        }
+        catch (Exception e) {
+            throw new Exception("Error: " + e.getLocalizedMessage());
+        }
     }
 }
