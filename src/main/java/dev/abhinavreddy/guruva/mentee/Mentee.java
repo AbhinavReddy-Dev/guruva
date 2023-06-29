@@ -45,21 +45,3 @@ public class Mentee {
     private Boolean isOpen = true;
     private Boolean isDeleted = false;
 }
-// dummy data
-// {
-//     "id": "123",
-//     "mentor": "abhinav",
-//     "mentee": "abhinav",
-//     "createdAt": "2020-10-10T10:10:10",
-//     "updatedAt": "2020-10-10T10:10:10",
-//     "closedAt": "2020-10-10T10:10:10",
-//     "learningSkills": [
-//         {
-//             "name": "java",
-//             "level": "beginner"
-//         }
-//     ],
-//     "learningMode": "online",
-//     "isClosed": false
-// }
-

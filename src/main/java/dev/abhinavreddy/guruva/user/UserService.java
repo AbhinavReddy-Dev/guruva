@@ -44,7 +44,7 @@ public class UserService {
             throw e;
         }
         catch (Exception e) {
-            throw new Exception("Error creating user. " + e.getLocalizedMessage());
+                throw new Exception(e.getLocalizedMessage());
         }
     }
 
@@ -57,7 +57,7 @@ public class UserService {
             throw e;
         }
         catch (Exception e) {
-            throw new UserNotFound("Error getting user. " + e.getLocalizedMessage());
+            throw new UserNotFound(e.getLocalizedMessage());
         }
     }
 
@@ -86,6 +86,8 @@ public class UserService {
                 update.set("experience", user.getExperience());
             if (user.getSkills() != null)
                 update.set("skills", user.getSkills());
+            if (user.getIsPrivate() != null)
+                update.set("isPrivate", user.getIsPrivate());
 
             mongoTemplate.updateFirst(query, update, User.class);
             return userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UserNotFound("User not found: " + user.getUsername()));
@@ -94,7 +96,7 @@ public class UserService {
             throw e;
         }
         catch (Exception e) {
-            throw new Exception("Error updating user. "+ e.getLocalizedMessage());
+            throw new Exception(e.getLocalizedMessage());
         }
     }
 
@@ -118,7 +120,7 @@ public class UserService {
         catch (UserAlreadyExists | UserNotFound e) {
             throw e;
         } catch (Exception e) {
-            throw new Exception("Error updating username");
+            throw new Exception(e.getLocalizedMessage());
         }
     }
 
@@ -180,7 +182,7 @@ public class UserService {
             throw e;
         }
         catch (Exception e) {
-            throw new UserNotFound("Error deleting user. " + e.getLocalizedMessage());
+            throw new UserNotFound(e.getLocalizedMessage());
         }
     }
 

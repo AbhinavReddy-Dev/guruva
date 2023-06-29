@@ -52,54 +52,7 @@ public class User {
         @LastModifiedDate
         private LocalDateTime updatedAt;
         private Boolean isDeleted = false;
-
-//  public method to return user details without password
-//  public Map<String, Object> getUserDetails() {
-//
-//        Map<String, Object> userDetails = new HashMap<>();
-//
-//        userDetails.put("id", this.id);
-//        userDetails.put("username", this.username);
-//        userDetails.put("fullName", this.fullName);
-//        userDetails.put("gender", this.gender);
-//        userDetails.put("email", this.email);
-//        userDetails.put("userToken", this.userToken);
-//        userDetails.put("photo", this.photo);
-//        userDetails.put("languagesSpoken", this.languagesSpoken);
-//        userDetails.put("country", this.country);
-//        userDetails.put("externalLinks", this.externalLinks);
-//        userDetails.put("experience", this.experience);
-//        userDetails.put("skills", this.skills);
-//        userDetails.put("mentorRating", this.mentorRating);
-//        userDetails.put("menteeRating", this.menteeRating);
-//        userDetails.put("createdAt", this.createdAt);
-//        userDetails.put("updatedAt", this.updatedAt);
-//
-//        return userDetails;
-//}
+        private Boolean isPrivate = false;
 
 }
-//        dummy data in json format
-//        {"_id":{"$oid":"641ceb6fda78acd08a0381df"},
-//        "photo":"https://fastly.picsum.photos/id/488/200/200.jpg?hmac=V8mvdG1ON09kNw80-qS00BSFq5gGhqRYoYPJftrsYA8",
-//        "username":"abhinavreddym",
-//        "password": "password",
-//        "userToken": "token",
-//        "fullName": "Abhinav Reddy",
-//        "gender": MALE,
-//        "email": "blabla@gmail.com",
-//        "languagesSpoken": ["English", "Hindi"],
-//        "country": "India",
-//        "mode": MENTOR,
-//        "externalLinks": ["https://www.google.com", "https://www.facebook.com"],
-//        "experience": [{ "company": "Google", "years": 2, "skillsUsed": ["Java", "Python"] }],
-//        "skills": [{ "name": "Java", "level": NOVICE }, { "name": "Python", "level": INTERMEDIATE }],
-//        "preferredMode": TEXT,
-//        "skillsThatNeedHelp": [{ "name": "Java", "level": NOVICE }, { "name": "Python", "level": INTERMEDIATE }],
-//        "skillsGotHelp": [{ "name": "Java", "level": NOVICE }, { "name": "Python", "level": INTERMEDIATE }],
-//        "mentors": [{ "username": "abhinavreddy", "skills": [{ "name": "Java", "level": NOVICE }, { "name": "Python", "level": INTERMEDIATE }] }],
-//        "mentorRating": 5,
-//        "menteeRating": 5
-//        }
-
 

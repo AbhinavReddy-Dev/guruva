@@ -4,14 +4,11 @@ import dev.abhinavreddy.guruva.exceptions.UserAlreadyExists;
 import dev.abhinavreddy.guruva.exceptions.UserNotFound;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -20,7 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     //    Not Readable Exceptions
-
     @ExceptionHandler(HttpMessageConversionException.class)
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageConversionException ex) {
         String error = "Malformed JSON: ";
@@ -54,12 +50,11 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
     }
 
     // Unknown Exceptions
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<Object> handleUnknownException(Exception ex) {
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<Object> handleUnknownException(RuntimeException ex) {
         // create a response entity with a response exception
         ResponseBody responseException = new ResponseBody(ex.getLocalizedMessage(), true, HttpStatus.INTERNAL_SERVER_ERROR, null);
 
         return new ResponseEntity<>(responseException, responseException.getStatus());
     }
-
 }
