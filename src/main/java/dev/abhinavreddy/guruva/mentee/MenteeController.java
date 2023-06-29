@@ -19,22 +19,26 @@ public class MenteeController {
         this.menteeService = menteeService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Mentee> createMentee(@RequestBody CreateMentee requestBody){
+//    create mentee
+    @PostMapping("/create") // ✅
+    public ResponseEntity<ResponseBody> createMentee(@RequestBody CreateMentee requestBody){
         System.out.println("Inside create mentee: " + requestBody.getMentee());
         Mentee newMentee = menteeService.createMentee(requestBody.getMentee(), requestBody.getUsername());
-        return ResponseEntity.ok(newMentee);
+        ResponseBody responseBody = new ResponseBody("Mentee created successfully!", false, HttpStatus.OK, newMentee);
+        return ResponseEntity.ok(responseBody);
     }
 
-    @PostMapping("/create_mentor_for_mentee")
-    public ResponseEntity<Mentor> createMentorForMentee(@RequestBody CreateMentorForMentee requestBody) throws Exception {
+//    create mentor for mentee
+    @PostMapping("/create_mentor_for_mentee") // ✅
+    public ResponseEntity<ResponseBody> createMentorForMentee(@RequestBody CreateMentorForMentee requestBody) throws Exception {
         System.out.println("Inside create mentor for mentee: " + requestBody.getMenteeId() + " " + requestBody.getMentorUsername());
         Mentor newMentor = menteeService.createMentorForMentee(requestBody.getMenteeId(), requestBody.getMentorUsername());
-        return ResponseEntity.ok(newMentor);
+        ResponseBody responseBody = new ResponseBody("Mentor created successfully!", false, HttpStatus.OK, newMentor);
+        return ResponseEntity.ok(responseBody);
     }
 
 //    get mentee by id
-    @GetMapping("/get/{id}")
+    @GetMapping("/get/{id}") // ✅
     public ResponseEntity<ResponseBody> getMentee(@PathVariable ObjectId id) throws Exception {
         System.out.println("Inside get mentee: " + id);
         Mentee mentee = menteeService.getMenteeById(id);
@@ -42,7 +46,8 @@ public class MenteeController {
         return ResponseEntity.ok(responseBody);
     }
 
-    @GetMapping("/get_all/{username}")
+//    get all mentees
+    @GetMapping("/get_all/{username}") // ✅
     public ResponseEntity<ResponseBody> getMentee(@PathVariable String username) throws Exception {
         System.out.println("Inside get mentees: " + username);
         Iterable<Mentee> allMentees = menteeService.getAllMenteesByMenteeUsername(username);
@@ -50,7 +55,8 @@ public class MenteeController {
         return ResponseEntity.ok(responseBody);
     }
 
-    @PatchMapping("close_mentee/{menteeId}")
+//    update mentee by id
+    @PatchMapping("close/{menteeId}") // ✅
     public ResponseEntity<ResponseBody> closeMentee(@PathVariable ObjectId menteeId) throws Exception {
         System.out.println("Inside close mentee: " + menteeId);
         Mentee mentee = menteeService.closeMentee(menteeId);
@@ -58,23 +64,26 @@ public class MenteeController {
         return ResponseEntity.ok(responseBody);
     }
 
-    @PatchMapping("remove_mentor/{menteeId}")
+//    remove mentor from mentee
+    @PatchMapping("remove_mentor/{menteeId}") // ✅
     public ResponseEntity<ResponseBody> removeMentor(@PathVariable ObjectId menteeId) throws Exception {
-        System.out.println("Inside remove mentor: " + menteeId);
-        Mentee mentee = menteeService.removeMentor(menteeId);
-        ResponseBody responseBody = new ResponseBody("Mentor removed successfully!", false, HttpStatus.OK, mentee);
-        return ResponseEntity.ok(responseBody);
+            System.out.println("Inside remove mentor: " + menteeId);
+            Mentee mentee = menteeService.removeMentor(menteeId);
+            ResponseBody responseBody = new ResponseBody("Mentor removed successfully!", false, HttpStatus.OK, mentee);
+            return ResponseEntity.ok(responseBody);
     }
 
-    @DeleteMapping("/delete/{id}")
+//    delete mentee by id
+    @DeleteMapping("/delete/{id}") // ✅
     public ResponseEntity<ResponseBody> deleteMentee(@PathVariable ObjectId id) throws Exception {
         System.out.println("Inside delete mentee: " + id);
-        Mentee mentee = menteeService.deleteMentee(id);
+        boolean mentee = menteeService.deleteMentee(id);
         ResponseBody responseBody = new ResponseBody("Mentee deleted successfully!", false, HttpStatus.OK, mentee);
         return ResponseEntity.ok(responseBody);
     }
 
-    @GetMapping("/get_all_deleted/{username}")
+//    get all deleted mentees
+    @GetMapping("/get_all_deleted/{username}") // ✅
     public ResponseEntity<ResponseBody> getAllDeletedMentees(@PathVariable String username) throws Exception {
         System.out.println("Inside get all deleted mentees: " + username);
         Iterable<Mentee> allDeletedMentees = menteeService.getAllDeletedByMenteeUsername(username);

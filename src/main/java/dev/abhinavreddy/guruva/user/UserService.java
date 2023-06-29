@@ -149,7 +149,7 @@ public class UserService {
             throw e;
         }
         catch (Exception e) {
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception(e.getLocalizedMessage());
         }
     }
 

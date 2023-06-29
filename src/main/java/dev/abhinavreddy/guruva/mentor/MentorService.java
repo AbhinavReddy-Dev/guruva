@@ -56,7 +56,7 @@ public class MentorService {
             throw e;
         }
         catch (Exception e) {
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception( e.getLocalizedMessage());
         }
     }
 
@@ -66,19 +66,17 @@ public class MentorService {
             return mentorRepository.findById(mentorId).orElseThrow(() -> new RuntimeException("Mentor not found."));
         }
         catch (Exception e) {
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception( e.getLocalizedMessage());
         }
     }
 
 //    get all mentors by username
-    public Iterable<Mentor> getAllMentorsByMentorUsername(String username) throws  Exception {
+    public Iterable<Mentor> getAllMentorsByMentorUsername(String username) throws Exception {
         try {
-            User user = userRepository.findByUsername(username).orElseThrow(()->
-                    new RuntimeException("User not found."));
-            return mentorRepository.findAllByMentor(user);
+            return mentorRepository.findAllByMentor(userRepository.findByUsername(username).orElseThrow(()-> new Exception("User not found.")).getId());
         }
         catch (Exception e) {
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception( e.getLocalizedMessage());
         }
     }
 
@@ -88,10 +86,10 @@ public class MentorService {
             User user = userRepository.findByUsername(username).orElseThrow(()->
                     new Exception("User not found: " + username));
 //            TODO: check if logged in user is username
-            return mentorRepository.findAllDeletedByMentor(user);
+            return mentorRepository.findAllDeletedByMentor(user.getId());
         }
         catch (Exception e) {
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception( e.getLocalizedMessage());
         }
     }
 
@@ -104,7 +102,7 @@ public class MentorService {
             mentor.setIsAvailable(isAvailable);
             return mentorRepository.save(mentor);
         } catch (Exception e) {
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception( e.getLocalizedMessage());
         }
     }
 //    remove mentee using mentorId and MenteeId
@@ -122,7 +120,7 @@ public class MentorService {
             return false;
         }
         catch (Exception e) {
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception( e.getLocalizedMessage());
         }
     }
 
@@ -137,7 +135,7 @@ public class MentorService {
             mentorRepository.save(mentor);
         }
         catch (Exception e) {
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception( e.getLocalizedMessage());
         }
     }
 }

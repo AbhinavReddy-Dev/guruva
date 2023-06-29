@@ -12,6 +12,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -23,6 +24,14 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
     @ExceptionHandler(HttpMessageConversionException.class)
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageConversionException ex) {
         String error = "Malformed JSON: ";
+        ResponseBody responseException =  new ResponseBody( error + ex.getLocalizedMessage(), true, HttpStatus.BAD_REQUEST, null);
+        return new ResponseEntity<>(responseException, responseException.getStatus());
+    }
+
+//    Path variable mismatch MethodArgumentTypeMismatchException
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    protected ResponseEntity<Object> handleMethodArgumentTypeMismatchException(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException ex) {
+        String error = "Path variable mismatch: ";
         ResponseBody responseException =  new ResponseBody( error + ex.getLocalizedMessage(), true, HttpStatus.BAD_REQUEST, null);
         return new ResponseEntity<>(responseException, responseException.getStatus());
     }

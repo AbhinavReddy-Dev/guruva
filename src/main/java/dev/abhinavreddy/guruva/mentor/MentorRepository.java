@@ -9,10 +9,10 @@ public interface MentorRepository extends MongoRepository<Mentor, ObjectId> {
 
 //  Query all records where isDeleted is false
     @Query(value = "{ 'mentor': ?0 ,'isDeleted' : true }")
-    Iterable<Mentor> findAllDeletedByMentor(User mentor);
+    Iterable<Mentor> findAllDeletedByMentor(ObjectId mentor);
 
 //  Query all records where mentor is user
     @Query(value = "{ 'mentor' : ?0, isDeleted: false }")
-    Iterable<Mentor> findAllByMentor(User mentor);
+    Iterable<Mentor> findAllByMentor(ObjectId mentor);
 
 }

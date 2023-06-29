@@ -9,10 +9,10 @@ public interface MenteeRepository extends MongoRepository<Mentee, ObjectId> {
 
 //  Query all records where mentee is user
     @Query(value = "{ 'mentee' : ?0, isDeleted: false }")
-    Iterable<Mentee> findAllByMentee(User mentee);
+    Iterable<Mentee> findAllByMentee(ObjectId mentee);
 
 //  Query all deleted records where mentee is user
     @Query(value = "{ 'mentee' : ?0, isDeleted: true }")
-    Iterable<Mentee> findAllDeletedByMentee(User mentee);
+    Iterable<Mentee> findAllDeletedByMentee(ObjectId mentee);
 
 }

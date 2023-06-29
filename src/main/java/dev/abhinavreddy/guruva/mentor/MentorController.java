@@ -19,14 +19,15 @@ public class MentorController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Mentor> createMentor(@RequestBody CreateMentor requestBody){
+    public ResponseEntity<ResponseBody> createMentor(@RequestBody CreateMentor requestBody){
 
 
         System.out.println("Inside create mentor: " + requestBody.getMentor());
 
 
         Mentor newMentor = mentorService.createMentor(requestBody.getMentor(), requestBody.getUsername());
-        return ResponseEntity.ok(newMentor);
+        ResponseBody responseBody = new ResponseBody("Mentor created successfully!", false, org.springframework.http.HttpStatus.OK, newMentor);
+        return ResponseEntity.ok(responseBody);
     }
 
     @PostMapping("/create_mentee_for_mentor")

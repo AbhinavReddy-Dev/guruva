@@ -54,7 +54,7 @@ public class MenteeService {
             return mentor;
         }
         catch (Exception e){
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception(e.getLocalizedMessage());
         }
     }
 
@@ -64,27 +64,27 @@ public class MenteeService {
             return menteeRepository.findById(id).orElseThrow(() -> new Exception("Mentee not found: " + id));
         }
         catch (Exception e){
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception(e.getLocalizedMessage());
         }
     }
 
     // get all mentees by mentee username
     public Iterable<Mentee> getAllMenteesByMenteeUsername(String username) throws Exception {
         try {
-            return menteeRepository.findAllByMentee(userRepository.findByUsername(username).orElseThrow( () -> new Exception("User not found: " + username)));
+            return menteeRepository.findAllByMentee(userRepository.findByUsername(username).orElseThrow( () -> new Exception("User not found: " + username)).getId());
         }
         catch (Exception e){
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception(e.getLocalizedMessage());
         }
     }
 
 //    get all deleted by mentee username
     public Iterable<Mentee> getAllDeletedByMenteeUsername(String username) throws Exception {
         try {
-            return menteeRepository.findAllDeletedByMentee(userRepository.findByUsername(username).orElseThrow( () -> new Exception("User not found: " + username)));
+            return menteeRepository.findAllDeletedByMentee(userRepository.findByUsername(username).orElseThrow( () -> new Exception("User not found: " + username)).getId());
         }
         catch (Exception e){
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception(e.getLocalizedMessage());
         }
     }
 
@@ -96,7 +96,8 @@ public class MenteeService {
             //  TODO: check if logged-in user and mentee are the same before removing mentor, else throw an exception
             if(mentee.getMentor() != null) {
                 mentee.setMentor(null);
-                mentee.setIsOpen(true);
+                if (!mentee.getIsOpen())
+                    mentee.setIsOpen(true);
                 return menteeRepository.save(mentee);
             }
             else {
@@ -105,7 +106,7 @@ public class MenteeService {
 
         }
         catch (Exception e){
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception(e.getLocalizedMessage());
         }
     }
 
@@ -119,21 +120,25 @@ public class MenteeService {
             return menteeRepository.save(mentee);
         }
         catch (Exception e){
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception(e.getLocalizedMessage());
         }
     }
 
 // delete mentee
-    public Mentee deleteMentee(ObjectId id) throws Exception {
+    public boolean deleteMentee(ObjectId id) throws Exception {
         try {
             Mentee mentee = menteeRepository.findById(id).orElse(null);
             assert mentee != null;
+            if(mentee.getIsDeleted()) {
+                throw new Exception("Mentee already deleted: " + id);
+            }
             //  TODO: check if logged-in user and mentee are the same before deleting, else throw an exception
             mentee.setIsDeleted(true);
-            return menteeRepository.save(mentee);
+            menteeRepository.save(mentee);
+            return true;
         }
         catch (Exception e){
-            throw new Exception("Error: " + e.getLocalizedMessage());
+            throw new Exception(e.getLocalizedMessage());
         }
     }
 
