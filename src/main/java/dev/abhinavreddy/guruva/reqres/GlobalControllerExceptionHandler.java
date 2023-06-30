@@ -50,6 +50,14 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
     }
 
     // Unknown Exceptions
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleUnknownException(Exception ex) {
+        // create a response entity with a response exception
+        ResponseBody responseException = new ResponseBody(ex.getLocalizedMessage(), true, HttpStatus.INTERNAL_SERVER_ERROR, null);
+
+        return new ResponseEntity<>(responseException, responseException.getStatus());
+    }
+    // Unknown RuntimeExceptions
     @ExceptionHandler(RuntimeException.class)
     protected ResponseEntity<Object> handleUnknownException(RuntimeException ex) {
         // create a response entity with a response exception

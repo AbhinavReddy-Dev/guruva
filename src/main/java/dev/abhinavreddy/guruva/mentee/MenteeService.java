@@ -20,7 +20,7 @@ public class MenteeService {
     }
 
 // create mentee
-    public Mentee createMentee(Mentee mentee, String username) {
+    public Mentee createMentee(Mentee mentee, String username) { // ✅
         // set user as mentee
         User user = userRepository.findByUsername(username).orElse(null);
         assert user != null;
@@ -30,7 +30,7 @@ public class MenteeService {
     }
 
 // Add Mentor by username and create mentor based on Mentee details using mongo template
-    public Mentor createMentorForMentee( ObjectId menteeId, String mentorUserName) throws Exception {
+    public Mentor createMentorForMentee( ObjectId menteeId, String mentorUserName) throws Exception { // ✅
         try {
             Mentee mentee = menteeRepository.findById(menteeId).orElseThrow(() -> new Exception("Mentee not found: " + menteeId));
             assert mentee != null;
@@ -59,7 +59,7 @@ public class MenteeService {
     }
 
     // get mentee by id
-    public Mentee getMenteeById(ObjectId id) throws Exception {
+    public Mentee getMenteeById(ObjectId id) throws Exception { // ✅
         try{
             return menteeRepository.findById(id).orElseThrow(() -> new Exception("Mentee not found: " + id));
         }
@@ -69,7 +69,7 @@ public class MenteeService {
     }
 
     // get all mentees by mentee username
-    public Iterable<Mentee> getAllMenteesByMenteeUsername(String username) throws Exception {
+    public Iterable<Mentee> getAllMenteesByMenteeUsername(String username) throws Exception { // ✅
         try {
             return menteeRepository.findAllByMentee(userRepository.findByUsername(username).orElseThrow( () -> new Exception("User not found: " + username)).getId());
         }
@@ -79,7 +79,7 @@ public class MenteeService {
     }
 
 //    get all deleted by mentee username
-    public Iterable<Mentee> getAllDeletedByMenteeUsername(String username) throws Exception {
+    public Iterable<Mentee> getAllDeletedByMenteeUsername(String username) throws Exception { // ✅
         try {
             return menteeRepository.findAllDeletedByMentee(userRepository.findByUsername(username).orElseThrow( () -> new Exception("User not found: " + username)).getId());
         }
@@ -89,7 +89,7 @@ public class MenteeService {
     }
 
 // remove mentor and update isClosed to false
-    public Mentee removeMentor(ObjectId menteeId) throws Exception {
+    public Mentee removeMentor(ObjectId menteeId) throws Exception { // ✅
         try {
             Mentee mentee = menteeRepository.findById(menteeId).orElseThrow(() -> new Exception("Mentee not found: " + menteeId));
             assert mentee != null;
@@ -111,7 +111,7 @@ public class MenteeService {
     }
 
 // close mentee
-    public Mentee closeMentee(ObjectId id) throws Exception {
+    public Mentee closeMentee(ObjectId id) throws Exception { // ✅
         try {
             Mentee mentee = menteeRepository.findById(id).orElseThrow( () -> new Exception("Mentee not found: " + id));
             assert mentee != null;
@@ -125,7 +125,7 @@ public class MenteeService {
     }
 
 // delete mentee
-    public boolean deleteMentee(ObjectId id) throws Exception {
+    public boolean deleteMentee(ObjectId id) throws Exception { // ✅
         try {
             Mentee mentee = menteeRepository.findById(id).orElse(null);
             assert mentee != null;

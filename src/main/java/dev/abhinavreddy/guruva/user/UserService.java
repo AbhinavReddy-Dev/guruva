@@ -63,8 +63,6 @@ public class UserService {
 
     public User updateUser(User user) throws Exception { // ✅
         try {
-//            System.out.println("Inside service: " + user);
-
             userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UserNotFound("User not found: " + user.getUsername()));
 
             Query query = new Query().addCriteria(Criteria.where("username").is(user.getUsername()));
@@ -124,7 +122,7 @@ public class UserService {
         }
     }
 
-    public void updatePassword(String username, String password) throws Exception {
+    public void updatePassword(String username, String password) throws Exception { // ✅
         try {
             User userPass = userRepository.findPasswordByUsername(username).orElseThrow(() -> new UserNotFound("User not found: " + username));
             // throws exception if password is shorter than 8 characters or longer than 20 characters or does not contain a number or does not contain a special character or does not contain an uppercase letter or does not contain a lowercase letter or is the same as the old password
