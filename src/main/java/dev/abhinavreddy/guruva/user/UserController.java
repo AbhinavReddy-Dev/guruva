@@ -1,6 +1,6 @@
 package dev.abhinavreddy.guruva.user;
 
-import dev.abhinavreddy.guruva.reqres.ResponseBody;
+import dev.abhinavreddy.guruva.config.ResponseBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

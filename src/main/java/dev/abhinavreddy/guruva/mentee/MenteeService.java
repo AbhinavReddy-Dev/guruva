@@ -48,7 +48,7 @@ public class MenteeService {
             mentorRepository.save(mentor);
 
             // update mentee with mentor
-            mentee.setMentor(mentor.getMentor());
+            mentee.setMentor(mentor);
             mentee.setIsOpen(true);
             menteeRepository.save(mentee);
             return mentor;

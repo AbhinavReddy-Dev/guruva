@@ -1,28 +1,22 @@
-package dev.abhinavreddy.guruva.reqres;
+package dev.abhinavreddy.guruva.exceptions;
 
-import dev.abhinavreddy.guruva.exceptions.UserAlreadyExists;
-import dev.abhinavreddy.guruva.exceptions.UserNotFound;
+import dev.abhinavreddy.guruva.config.ResponseBody;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
-
-    //    Not Readable Exceptions
-    @ExceptionHandler(HttpMessageConversionException.class)
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageConversionException ex) {
-        String error = "Malformed JSON: ";
-        ResponseBody responseException =  new ResponseBody( error + ex.getLocalizedMessage(), true, HttpStatus.BAD_REQUEST, null);
-        return new ResponseEntity<>(responseException, responseException.getStatus());
-    }
 
 //    Path variable mismatch MethodArgumentTypeMismatchException
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -49,6 +43,14 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         return new ResponseEntity<>(responseException, responseException.getStatus());
     }
 
+//    IllegalArgumentException exception
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        // create a response entity with a response exception
+        ResponseBody responseException = new ResponseBody(ex.getLocalizedMessage(), true, HttpStatus.PARTIAL_CONTENT, null);
+
+        return new ResponseEntity<>(responseException, responseException.getStatus());
+    }
     // Unknown Exceptions
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleUnknownException(Exception ex) {

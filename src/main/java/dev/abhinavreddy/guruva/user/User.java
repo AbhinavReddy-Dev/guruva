@@ -20,7 +20,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @RequiredArgsConstructor(staticName = "of")
 @NoArgsConstructor
-@JsonIgnoreProperties({"userToken", "isDeleted"})
+@JsonIgnoreProperties({"id", "userToken", "isDeleted"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "user")
 public class User {

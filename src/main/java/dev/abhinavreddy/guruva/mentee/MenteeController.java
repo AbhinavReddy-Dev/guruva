@@ -3,7 +3,7 @@ package dev.abhinavreddy.guruva.mentee;
 import dev.abhinavreddy.guruva.reqbodytypes.CreateMentee;
 import dev.abhinavreddy.guruva.reqbodytypes.CreateMentorForMentee;
 import dev.abhinavreddy.guruva.mentor.Mentor;
-import dev.abhinavreddy.guruva.reqres.ResponseBody;
+import dev.abhinavreddy.guruva.config.ResponseBody;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/mentee")
-
 public class MenteeController {
     private final MenteeService menteeService;
     public MenteeController(MenteeService menteeService) {

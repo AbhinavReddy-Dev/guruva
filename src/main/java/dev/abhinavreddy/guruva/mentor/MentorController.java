@@ -3,7 +3,7 @@ package dev.abhinavreddy.guruva.mentor;
 import dev.abhinavreddy.guruva.mentee.Mentee;
 import dev.abhinavreddy.guruva.reqbodytypes.CreateMenteeForMentor;
 import dev.abhinavreddy.guruva.reqbodytypes.CreateMentor;
-import dev.abhinavreddy.guruva.reqres.ResponseBody;
+import dev.abhinavreddy.guruva.config.ResponseBody;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

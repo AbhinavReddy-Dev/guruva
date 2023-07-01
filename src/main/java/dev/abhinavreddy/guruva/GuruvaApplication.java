@@ -14,7 +14,3 @@ public class GuruvaApplication {
 
 
 }
-
-// TODO: Add MentorService
-// TODO: Add MenteeService
-// TODO: Add NotificationService

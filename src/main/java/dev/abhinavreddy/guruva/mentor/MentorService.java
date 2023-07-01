@@ -44,7 +44,7 @@ public class MentorService {
 
             Mentee mentee = new Mentee();
             mentee.setMentee(user);
-            mentee.setMentor(mentor.getMentor());
+            mentee.setMentor(mentor);
             mentee.setLearningMode(mentor.getLearningMode());
             mentee.setSkills(mentor.getSkills());
             mentee.setIsOpen(true);
@@ -113,17 +113,24 @@ public class MentorService {
         try {
             Mentee mentee = menteeRepository.findById(menteeId).orElseThrow(() -> new Exception("Mentee not found: " + menteeId));
             assert mentee != null;
-            if (mentee.getMentor() != null ) { // TODO: and check if logged in user is mentor of mentee
+
+            if(mentee.getIsDeleted())
+                throw new Exception("Can't remove Mentee: " + menteeId + " as it is already deleted.");
+
+            if (mentee.getMentor() == null)
+                throw new Exception("Mentee: " + menteeId + " is not assigned to any mentor.");
+
+            if (mentee.getMentor() != null && !mentee.getIsDeleted() ) { // TODO: and check if logged in user is mentor of mentee
                 mentee.setMentor(null);
                 mentee.setIsOpen(true);
                 menteeRepository.save(mentee);
                 return true;
             }
-            return false;
         }
         catch (Exception e) {
             throw new Exception(e.getLocalizedMessage());
         }
+        return false;
     }
 
 //    delete mentor

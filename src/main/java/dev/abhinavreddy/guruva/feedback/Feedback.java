@@ -1,10 +1,10 @@
-package dev.abhinavreddy.guruva.mentee;
+package dev.abhinavreddy.guruva.feedback;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import dev.abhinavreddy.guruva.customtypes.LearningMode;
-import dev.abhinavreddy.guruva.customtypes.Skill;
+import dev.abhinavreddy.guruva.customtypes.FeedbackType;
+import dev.abhinavreddy.guruva.mentee.Mentee;
 import dev.abhinavreddy.guruva.mentor.Mentor;
 import dev.abhinavreddy.guruva.user.User;
 import lombok.AllArgsConstructor;
@@ -17,32 +17,38 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "mentee")
+@Document(collection = "feedback")
 @JsonIgnoreProperties({"isDeleted"})
-public class Mentee {
+public class Feedback {
     @Id
     @JsonSerialize(using= ToStringSerializer.class)
     private ObjectId id;
     @NonNull
+    private FeedbackType type;
+    @NonNull
     @DocumentReference(db = "guruva", collection = "user")
-    private User mentee;
+    private User byUser;
+    @NonNull
+    @DocumentReference(db = "guruva", collection = "user")
+    private User forUser;
+    @DocumentReference(db = "guruva", collection = "mentee")
+    private Mentee mentee;
     @DocumentReference(db = "guruva", collection = "mentor")
     private Mentor mentor;
+    private Float rating;
+    private String comment;
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
-    @NonNull
-    private List<Skill> skills;
-    @NonNull
-    private LearningMode learningMode;
-    private Boolean isOpen = true;
     private Boolean isDeleted = false;
 }
+
+// feedback type enum
+
+

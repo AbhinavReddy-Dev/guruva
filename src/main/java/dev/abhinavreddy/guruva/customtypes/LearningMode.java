@@ -8,7 +8,7 @@ public enum LearningMode {
     LearningMode(String learningMode) {
         this.leaningMode = learningMode;
     }
-    public String getLeaningMode() {
+    public String getLearningMode() {
         return this.leaningMode;
     }
 }

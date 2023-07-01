@@ -1,4 +1,4 @@
-package dev.abhinavreddy.guruva.reqres;
+package dev.abhinavreddy.guruva.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
