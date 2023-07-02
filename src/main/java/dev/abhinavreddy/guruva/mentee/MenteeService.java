@@ -5,6 +5,10 @@ import dev.abhinavreddy.guruva.mentor.MentorRepository;
 import dev.abhinavreddy.guruva.user.User;
 import dev.abhinavreddy.guruva.user.UserRepository;
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,11 +16,13 @@ public class MenteeService {
     private final MenteeRepository menteeRepository;
     private final UserRepository userRepository;
     private final MentorRepository mentorRepository;
+    private final MongoTemplate mongoTemplate;
 // constructor injection for menteeRepository and userRepository
-    public MenteeService(MenteeRepository menteeRepository, UserRepository userRepository, MentorRepository mentorRepository) {
+    public MenteeService(MenteeRepository menteeRepository, UserRepository userRepository, MentorRepository mentorRepository, MongoTemplate mongoTemplate) {
         this.menteeRepository = menteeRepository;
         this.userRepository = userRepository;
         this.mentorRepository = mentorRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
 // create mentee
@@ -48,9 +54,9 @@ public class MenteeService {
             mentorRepository.save(mentor);
 
             // update mentee with mentor
-            mentee.setMentor(mentor);
-            mentee.setIsOpen(true);
-            menteeRepository.save(mentee);
+            Query query = new Query().addCriteria(Criteria.where("_id").is(menteeId));
+            Update update = new Update().set("mentor", mentor);
+            mongoTemplate.updateFirst(query, update, Mentee.class);
             return mentor;
         }
         catch (Exception e){
@@ -95,10 +101,15 @@ public class MenteeService {
             assert mentee != null;
             //  TODO: check if logged-in user and mentee are the same before removing mentor, else throw an exception
             if(mentee.getMentor() != null) {
+                Query query = new Query().addCriteria(Criteria.where("_id").is(menteeId));
+                Update update = new Update().set("mentor", null);
                 mentee.setMentor(null);
-                if (!mentee.getIsOpen())
+                if (!mentee.getIsOpen()) {
                     mentee.setIsOpen(true);
-                return menteeRepository.save(mentee);
+                    update.set("isOpen", true);
+                }
+                mongoTemplate.updateFirst(query, update, Mentee.class);
+                return mentee;
             }
             else {
                 throw new Exception("Mentor not found to remove for mentee: " + menteeId);
@@ -116,8 +127,14 @@ public class MenteeService {
             Mentee mentee = menteeRepository.findById(id).orElseThrow( () -> new Exception("Mentee not found: " + id));
             assert mentee != null;
 //  TODO: check if logged-in user and mentee are the same before closing, else throw an exception
+            if(!mentee.getIsOpen()) {
+                throw new Exception("Mentee already closed: " + id);
+            }
+            Query query = new Query().addCriteria(Criteria.where("_id").is(id));
+            Update update = new Update().set("isOpen", false);
+            mongoTemplate.updateFirst(query, update, Mentee.class);
             mentee.setIsOpen(false);
-            return menteeRepository.save(mentee);
+            return mentee;
         }
         catch (Exception e){
             throw new Exception(e.getLocalizedMessage());
@@ -133,8 +150,9 @@ public class MenteeService {
                 throw new Exception("Mentee already deleted: " + id);
             }
             //  TODO: check if logged-in user and mentee are the same before deleting, else throw an exception
-            mentee.setIsDeleted(true);
-            menteeRepository.save(mentee);
+            Query query = new Query().addCriteria(Criteria.where("_id").is(id));
+            Update update = new Update().set("isDeleted", true);
+            mongoTemplate.updateFirst(query, update, Mentee.class);
             return true;
         }
         catch (Exception e){

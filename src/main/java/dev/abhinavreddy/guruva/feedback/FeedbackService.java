@@ -29,7 +29,7 @@ public class FeedbackService {
 //    create feedback
     public Feedback createFeedback(CreateFeedback createFeedback) throws Exception {
        try {
-
+                System.out.println("Inside create feedback service");
                if(createFeedback.getType() == null) {
                    throw new IllegalArgumentException("Feedback type cannot be null");
                }
@@ -55,9 +55,12 @@ public class FeedbackService {
 
                User byUser = userRepository.findByUsername(createFeedback.getByUsername()).orElseThrow( () -> new UserNotFound("Feedback author not found."));
                User forUser = userRepository.findByUsername(createFeedback.getForUsername()).orElseThrow( () -> new UserNotFound("Feedback receiver not found."));
-
                Mentee mentee = menteeRepository.findByIdAndIsDeletedFalse(createFeedback.getMenteeId()).orElseThrow( () -> new Exception("Mentee not found: " + createFeedback.getMenteeId()));
                Mentor mentor = mentorRepository.findByIdAndIsDeletedFalse(createFeedback.getMentorId()).orElseThrow( () -> new Exception("Mentor not found: " + createFeedback.getMentorId()));
+
+               if(feedbackRepository.findAllByMentorAndMentee(mentor.getId(), mentee.getId()).iterator().hasNext()) {
+                   throw new IllegalArgumentException("Feedback already exists");
+               }
 
                if(createFeedback.getType() == FeedbackType.MENTEE_TO_MENTOR) {
                    if(!mentee.getMentee().getUsername().equals(byUser.getUsername())) {
@@ -99,8 +102,21 @@ public class FeedbackService {
     }
 
 //    get all feedback for a user (username) for type (type)
-    public Iterable<Feedback> getFeedback(String username, String type) throws Exception {
+    public Iterable<Feedback> getFeedbackForUserAndType(String username, String type) throws Exception {
+        try {
+            User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFound("User not found: " + username));
+            return feedbackRepository.findAllForUserAndType(user.getId(), FeedbackType.valueOf(type));
+        }
+        catch(UserNotFound e) {
+            throw e;
+        }
+        catch(Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 
+//    get all feedback by a user (username) for type (type)
+    public Iterable<Feedback> getFeedbackByUserAndType(String username, String type) throws Exception {
         try {
             User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFound("User not found: " + username));
             return feedbackRepository.findAllByUserAndType(user.getId(), FeedbackType.valueOf(type));

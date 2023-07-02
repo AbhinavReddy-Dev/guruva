@@ -12,11 +12,15 @@ public interface FeedbackRepository extends MongoRepository<Feedback, ObjectId> 
     Iterable<Feedback> findAllByUserAndType(ObjectId byUser, FeedbackType type);
 //    Query feedback by forUser and type
     @Query(value = "{ 'forUser' : ?0, 'type' : ?1, 'isDeleted' : false }")
-    Iterable<Feedback> findAllByForUserAndType(ObjectId forUser, FeedbackType type);
+    Iterable<Feedback> findAllForUserAndType(ObjectId forUser, FeedbackType type);
 //    Query feedback for a mentor
     @Query(value="{'mentor': ?0, 'isDeleted': false}")
-    Iterable<Feedback> findAllByForUser(ObjectId mentor);
+    Iterable<Feedback> findAllMentor(ObjectId mentor);
 //    Query feedback for a mentee
     @Query(value="{'mentee': ?0, 'isDeleted': false}")
-    Iterable<Feedback> findAllByByUser(ObjectId mentee);
+    Iterable<Feedback> findAllMentee(ObjectId mentee);
+
+//    Query to get feedback by mentorId and menteeId
+    @Query(value = "{ 'mentor' : ?0, 'mentee' : ?1, 'isDeleted' : false }")
+    Iterable<Feedback> findAllByMentorAndMentee(ObjectId mentorId, ObjectId menteeId);
 }

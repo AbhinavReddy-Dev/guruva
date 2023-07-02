@@ -63,32 +63,50 @@ public class UserService {
 
     public User updateUser(User user) throws Exception { // ✅
         try {
-            userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UserNotFound("User not found: " + user.getUsername()));
+            User userUpdated = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UserNotFound("User not found: " + user.getUsername()));
 
             Query query = new Query().addCriteria(Criteria.where("username").is(user.getUsername()));
 
             Update update = new Update();
-            if (user.getFullName() != null)
+            if (user.getFullName() != null) {
                 update.set("fullName", user.getFullName());
-            if (user.getEmail() != null)
+                userUpdated.setFullName(user.getFullName());
+            }
+            if (user.getEmail() != null) {
                 update.set("email", user.getEmail());
-            if(user.getGender() != null)
+                userUpdated.setEmail(user.getEmail());
+            }
+            if(user.getGender() != null) {
                 update.set("gender", user.getGender());
-            if (user.getPhoto() != null)
+                userUpdated.setGender(user.getGender());
+            }
+            if (user.getPhoto() != null) {
                 update.set("photo", user.getPhoto());
-            if (user.getLanguagesSpoken() != null)
+                userUpdated.setPhoto(user.getPhoto());
+            }
+            if (user.getLanguagesSpoken() != null) {
                 update.set("languagesSpoken", user.getLanguagesSpoken());
-            if (user.getCountry() != null)
+                userUpdated.setLanguagesSpoken(user.getLanguagesSpoken());
+            }
+            if (user.getCountry() != null) {
                 update.set("country", user.getCountry());
-            if (user.getExperience() != null)
+                userUpdated.setCountry(user.getCountry());
+            }
+            if (user.getExperience() != null) {
                 update.set("experience", user.getExperience());
-            if (user.getSkills() != null)
+                userUpdated.setExperience(user.getExperience());
+            }
+            if (user.getSkills() != null) {
                 update.set("skills", user.getSkills());
-            if (user.getIsPrivate() != null)
+                userUpdated.setSkills(user.getSkills());
+            }
+            if (user.getIsPrivate() != null) {
                 update.set("isPrivate", user.getIsPrivate());
+                userUpdated.setIsPrivate(user.getIsPrivate());
+            }
 
             mongoTemplate.updateFirst(query, update, User.class);
-            return userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UserNotFound("User not found: " + user.getUsername()));
+            return userUpdated;
         }
         catch (UserNotFound e) {
             throw e;
@@ -113,7 +131,8 @@ public class UserService {
             update.set("userToken", token);
             mongoTemplate.updateFirst(query, update, User.class);
 
-            return userRepository.findByUsername(newUsername).orElseThrow(() -> new UserNotFound("User not found: " + newUsername));
+            user.setUsername(newUsername);
+            return user;
         }
         catch (UserAlreadyExists | UserNotFound e) {
             throw e;
@@ -125,16 +144,17 @@ public class UserService {
     public void updatePassword(String username, String password) throws Exception { // ✅
         try {
             User userPass = userRepository.findPasswordByUsername(username).orElseThrow(() -> new UserNotFound("User not found: " + username));
-            // throws exception if password is shorter than 8 characters or longer than 20 characters or does not contain a number or does not contain a special character or does not contain an uppercase letter or does not contain a lowercase letter or is the same as the old password
-//            decrypt password
+
+            if (verifyPasswordStrength(password)) {
+                // TODO: new exception
+                throw new Exception("Invalid password.");
+            }
+
+            //            decrypt password
             String oldPassword = new String(java.util.Base64.getDecoder().decode(userPass.getPassword().getBytes()));
 
             if (oldPassword.equals(password)) {
                 throw new Exception("New password cannot be the same as the old password.");
-            }
-            if (verifyPasswordStrength(password)) {
-            // TODO: new exception
-                throw new Exception("Invalid password.");
             }
 
             // hash password with base64 and save
@@ -154,6 +174,7 @@ public class UserService {
     }
 
     public Optional<User> updateMentorRating(User user){
+//        Feedback: forUser, "MENTEE_TO_MENTOR"
         return userRepository.findById(user.getId()).map(u -> {
             u.setMentorRating(user.getMentorRating());
             return userRepository.save(u);
@@ -161,6 +182,7 @@ public class UserService {
     }
 
     public Optional<User> updateMenteeRating(User user){
+//        Feedback: forUser, "MENTOR_TO_MENTEE"
         return userRepository.findById(user.getId()).map(u -> {
             u.setMenteeRating(user.getMenteeRating());
             return userRepository.save(u);

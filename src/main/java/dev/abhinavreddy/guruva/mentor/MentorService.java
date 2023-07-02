@@ -7,6 +7,9 @@ import dev.abhinavreddy.guruva.user.User;
 import dev.abhinavreddy.guruva.user.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -101,9 +104,12 @@ public class MentorService {
         try {
             Mentor mentor = mentorRepository.findById(mentorId).orElseThrow(() -> new Exception("Mentor not found: " + mentorId));
             assert mentor != null;
+            Query query = new Query().addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("_id").is(mentorId));
+            Update update = new Update().set("isAvailable", isAvailable);
+            mongoTemplate.updateFirst(query, update, Mentor.class);
 //            TODO: check if logged in user is mentor
             mentor.setIsAvailable(isAvailable);
-            return mentorRepository.save(mentor);
+            return mentor;
         } catch (Exception e) {
             throw new Exception(e.getLocalizedMessage());
         }
@@ -121,9 +127,12 @@ public class MentorService {
                 throw new Exception("Mentee: " + menteeId + " is not assigned to any mentor.");
 
             if (mentee.getMentor() != null && !mentee.getIsDeleted() ) { // TODO: and check if logged in user is mentor of mentee
-                mentee.setMentor(null);
-                mentee.setIsOpen(true);
-                menteeRepository.save(mentee);
+                Query query = new Query().addCriteria(Criteria.where("_id").is(menteeId));
+                Update update = new Update().set("mentor", null).set("isOpen", true);
+                mongoTemplate.updateFirst(query, update, Mentee.class);
+//                mentee.setMentor(null);
+//                mentee.setIsOpen(true);
+//                menteeRepository.save(mentee);
                 return true;
             }
         }
@@ -142,9 +151,9 @@ public class MentorService {
             if (mentor.getIsDeleted()){
                 throw new Exception("Mentor already deleted: " + mentorId);
             }
-            mentor.setIsAvailable(false);
-            mentor.setIsDeleted(true);
-            mentorRepository.save(mentor);
+            Query query = new Query().addCriteria(Criteria.where("_id").is(mentorId));
+            Update update = new Update().set("isDeleted", true).set("isAvailable", false);
+            mongoTemplate.updateFirst(query, update, Mentor.class);
         }
         catch (Exception e) {
             throw new Exception(e.getLocalizedMessage());
