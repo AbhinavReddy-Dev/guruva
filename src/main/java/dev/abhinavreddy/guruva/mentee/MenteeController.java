@@ -63,6 +63,15 @@ public class MenteeController {
         return ResponseEntity.ok(responseBody);
     }
 
+//  reopen mentee
+    @PatchMapping("reopen/{menteeId}") // ✅
+    public ResponseEntity<ResponseBody> reopenMentee(@PathVariable ObjectId menteeId) throws Exception {
+        System.out.println("Inside reopen mentee: " + menteeId);
+        Mentee mentee = menteeService.reopenMentee(menteeId);
+        ResponseBody responseBody = new ResponseBody("Mentee reopened successfully!", false, HttpStatus.OK, mentee);
+        return ResponseEntity.ok(responseBody);
+    }
+
 //    remove mentor from mentee
     @PatchMapping("remove_mentor/{menteeId}") // ✅
     public ResponseEntity<ResponseBody> removeMentor(@PathVariable ObjectId menteeId) throws Exception {

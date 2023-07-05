@@ -9,6 +9,7 @@ import dev.abhinavreddy.guruva.mentor.MentorRepository;
 import dev.abhinavreddy.guruva.reqbodytypes.CreateFeedback;
 import dev.abhinavreddy.guruva.user.User;
 import dev.abhinavreddy.guruva.user.UserRepository;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -123,6 +124,28 @@ public class FeedbackService {
         }
         catch(UserNotFound e) {
             throw e;
+        }
+        catch(Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+//    get all feedback for a mentor (mentorId)
+    public Iterable<Feedback> getFeedbackForMentor(ObjectId mentorId) throws Exception {
+        try {
+            Mentor mentor = mentorRepository.findByIdAndIsDeletedFalse(mentorId).orElseThrow( () -> new Exception("Mentor not found: " + mentorId));
+            return feedbackRepository.findAllByMentor(mentor.getId());
+        }
+        catch(Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+//    get all feedback for a mentee (menteeId)
+    public Iterable<Feedback> getFeedbackForMentee(ObjectId menteeId) throws Exception {
+        try {
+            Mentee mentee = menteeRepository.findByIdAndIsDeletedFalse(menteeId).orElseThrow( () -> new Exception("Mentee not found: " + menteeId));
+            return feedbackRepository.findAllByMentee(mentee.getId());
         }
         catch(Exception e) {
             throw new Exception(e.getMessage());

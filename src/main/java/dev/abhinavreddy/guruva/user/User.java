@@ -47,12 +47,19 @@ public class User {
         private List<Skill> skills;
         private Float mentorRating;
         private Float menteeRating;
+//        profile completion fields
+        private Boolean emailVerified = false;
+        private Boolean emailNotifications = false;
+        private Boolean isPrivate = false;
+        private Boolean isProfileComplete = false;
+        private Boolean isProfileVerified = false;
+//        profile completion fields end
         @CreatedDate
         private LocalDateTime createdAt;
         @LastModifiedDate
         private LocalDateTime updatedAt;
+
         private Boolean isDeleted = false;
-        private Boolean isPrivate = false;
 
 }
 

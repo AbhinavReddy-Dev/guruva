@@ -2,6 +2,7 @@ package dev.abhinavreddy.guruva.feedback;
 
 import dev.abhinavreddy.guruva.config.ResponseBody;
 import dev.abhinavreddy.guruva.reqbodytypes.CreateFeedback;
+import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,8 +55,28 @@ public class FeedbackController {
     }
 
 //    get all feedback for a mentor (mentorId)
+    @GetMapping("/get_all_for_mentor")
+    public ResponseEntity<ResponseBody> getFeedbackForMentor(@RequestBody Map<String, ObjectId> reqBody) throws Exception {
+        Iterable<Feedback> feedback = feedbackService.getFeedbackForMentor(reqBody.get("mentorId"));
+
+        ResponseBody responseBody = new ResponseBody("Feedback found!", false, HttpStatus.OK, feedback);
+        if(!feedback.iterator().hasNext()) {
+            responseBody.setMessage("No feedback found!");
+        }
+        return ResponseEntity.ok(responseBody);
+    }
 
 //    get all feedback for a mentee (menteeId)
+    @GetMapping("/get_all_for_mentee")
+    public ResponseEntity<ResponseBody> getFeedbackForMentee(@RequestBody Map<String, ObjectId> reqBody) throws Exception {
+        Iterable<Feedback> feedback = feedbackService.getFeedbackForMentee(reqBody.get("menteeId"));
+
+        ResponseBody responseBody = new ResponseBody("Feedback found!", false, HttpStatus.OK, feedback);
+        if(!feedback.iterator().hasNext()) {
+            responseBody.setMessage("No feedback found!");
+        }
+        return ResponseEntity.ok(responseBody);
+    }
 
 //    update feedback (rating, comment)
 

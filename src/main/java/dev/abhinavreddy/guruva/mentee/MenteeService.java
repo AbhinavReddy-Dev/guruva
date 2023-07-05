@@ -25,6 +25,8 @@ public class MenteeService {
         this.mongoTemplate = mongoTemplate;
     }
 
+//    TODO: Check if logged in username is mentee username
+
 // create mentee
     public Mentee createMentee(Mentee mentee, String username) { // ✅
         // set user as mentee
@@ -137,6 +139,25 @@ public class MenteeService {
             return mentee;
         }
         catch (Exception e){
+            throw new Exception(e.getLocalizedMessage());
+        }
+    }
+
+//    reopen mentee
+    public Mentee reopenMentee(ObjectId id) throws Exception { // ✅
+        try {
+            Mentee mentee = menteeRepository.findById(id).orElseThrow(() -> new Exception("Mentee not found: " + id));
+            assert mentee != null;
+            if(mentee.getIsOpen()) {
+                throw new Exception("Mentee already open: " + id);
+            }
+            //  TODO: check if logged-in user and mentee are the same before opening, else throw an exception
+            Query query = new Query().addCriteria(Criteria.where("_id").is(id));
+            Update update = new Update().set("isOpen", true);
+            mongoTemplate.updateFirst(query, update, Mentee.class);
+            mentee.setIsOpen(true);
+            return mentee;
+        } catch (Exception e) {
             throw new Exception(e.getLocalizedMessage());
         }
     }
